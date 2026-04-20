@@ -22,8 +22,8 @@ require_once __DIR__ . '/bootstrap.php';
         try {
             loadPage();
         } catch (HttpException $e) {
-
             http_response_code($e->getStatusCode());
+            Logger::getInstance()->warning('HTTP Exception: ' . $e->getMessage(), ['status' => $e->getStatusCode()]);
 
             $statusCode = $e->getStatusCode();
             $errorView = __DIR__ . "/views/errors/{$statusCode}.php";
@@ -37,9 +37,12 @@ require_once __DIR__ . '/bootstrap.php';
                 echo $e->getMessage();
             }
         } catch (Throwable $e) {
-
             http_response_code(500);
-            error_log($e->getMessage());
+            Logger::getInstance()->error('Uncaught exception: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             require __DIR__ . "/views/errors/500.php";
         }

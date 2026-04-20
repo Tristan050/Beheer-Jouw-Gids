@@ -30,8 +30,8 @@ class CSRF
         if (!$isValidToken) {
             http_response_code(403);
 
-            $_SESSION['error'] = 'Je sessie is verlopen of ongeldig. Probeer opnieuw.';
-            redirect('login');
+            setFlash('auth_error', 'Je sessie is verlopen of ongeldig. Probeer opnieuw.');
+            redirect(appUrl('login'));
             exit;
         }
 

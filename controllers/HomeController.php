@@ -2,13 +2,24 @@
 
 class HomeController extends BaseController
 {
-    public function admin(): void
+    private AuthService $authService;
+
+    public function __construct(?AuthService $authService = null)
     {
-        $this->render('admin');
+        $this->authService = $authService ?? new AuthService();
     }
 
     public function index(): void
     {
-        $this->render('home/home');
+        if (!isLoggedIn()) {
+            setFlash('auth_error', 'Log eerst in om verder te gaan.');
+            redirect(appUrl('login'));
+        }
+
+        $user = $this->authService->getAuthenticatedUser();
+
+        $this->render('home/home', [
+            'user' => $user ?? [],
+        ]);
     }
 }
