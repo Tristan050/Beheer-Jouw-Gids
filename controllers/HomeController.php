@@ -18,7 +18,7 @@ class HomeController extends BaseController
 
         $user = $this->authService->getAuthenticatedUser();
 
-        $this->render('home/home', [
+        $this->render('admin/admin', [
             'user' => $user ?? [],
         ]);
     }

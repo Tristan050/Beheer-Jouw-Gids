@@ -12,7 +12,7 @@ class AuthController extends BaseController
     public function index(): void
     {
         if (isLoggedIn()) {
-            redirect(appUrl('home'));
+            redirect(appUrl('admin'));
         }
 
         $error = null;
@@ -31,7 +31,7 @@ class AuthController extends BaseController
                 $error = 'Vul je wachtwoord in.';
             } elseif ($this->authService->attemptLogin($email, $password)) {
                 clearOldInput();
-                redirect(appUrl('home'));
+                redirect(appUrl('admin'));
             } else {
                 $error = 'Ongeldige inloggegevens.';
             }

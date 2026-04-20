@@ -14,7 +14,7 @@ return [
             'controller' => 'AuthController',
             'method' => 'logout',
         ],
-        'home' => [
+        'admin' => [
             'controller' => 'HomeController',
             'method' => 'index',
         ],
