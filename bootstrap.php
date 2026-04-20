@@ -23,11 +23,31 @@ require_once __DIR__ . '/config.php';
 
 require_once __DIR__ . '/libs/HttpException.php';
 require_once __DIR__ . '/libs/CSRF.php';
+require_once __DIR__ . '/libs/functions_dbs_mysqli.php';
 require_once __DIR__ . '/libs/helper.php';
-require_once __DIR__ . '/controllers/BaseController.php';
 require_once __DIR__ . '/libs/loadPage.php';
 
 CSRF::init();
+
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    Logger::getInstance()->error($errstr, [
+        'file' => $errfile,
+        'line' => $errline,
+        'code' => $errno,
+    ]);
+    return false;
+});
+
+set_exception_handler(function (Throwable $e) {
+    Logger::getInstance()->error($e->getMessage(), [
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'trace' => $e->getTraceAsString(),
+    ]);
+    http_response_code(500);
+    require __DIR__ . '/views/errors/500.php';
+    exit();
+});
 
 header("X-Content-Type-Options: nosniff");
 header("Referrer-Policy: strict-origin-when-cross-origin");
