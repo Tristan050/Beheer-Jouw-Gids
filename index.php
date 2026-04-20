@@ -8,7 +8,12 @@ require_once __DIR__ . '/bootstrap.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beheer Jouw Gids</title>
-    <link href="/src/output.css" rel="stylesheet">
+    <?php
+    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
+    $basePath = rtrim($scriptDir, '/.');
+    $cssPath = ($basePath === '' ? '' : $basePath) . '/src/output.css';
+    ?>
+    <link href="<?= htmlspecialchars($cssPath, ENT_QUOTES, 'UTF-8') ?>" rel="stylesheet">
 </head>
 
 <body class="bg-background min-h-screen flex flex-col">

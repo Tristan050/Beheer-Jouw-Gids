@@ -2,6 +2,10 @@
 
 return [
     'routes' => [
+        'admin' => [
+            'controller' => 'HomeController',
+            'method' => 'admin',
+        ],
         'login' => [
             'controller' => 'AuthController',
             'method' => 'index',
