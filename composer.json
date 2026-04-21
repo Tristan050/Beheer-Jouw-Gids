@@ -6,7 +6,9 @@
     "autoload": {
         "classmap": [
             "controllers/",
-            "libs/"
+            "libs/",
+            "repositories/",
+            "services/"
         ]
     }
 }

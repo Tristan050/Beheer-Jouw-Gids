@@ -33,5 +33,5 @@ function loadPage(): void
         }
     }
 
-    throw new HttpException('Pagina niet gevonden', 404);
+    throw new HttpException(404, 'Pagina niet gevonden');
 }
