@@ -8,7 +8,12 @@ require_once __DIR__ . '/bootstrap.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beheer Jouw Gids</title>
-    <link href="/src/output.css" rel="stylesheet">
+    <?php
+    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
+    $basePath = rtrim($scriptDir, '/.');
+    $cssPath = ($basePath === '' ? '' : $basePath) . '/src/output.css';
+    ?>
+    <link href="<?= htmlspecialchars($cssPath, ENT_QUOTES, 'UTF-8') ?>" rel="stylesheet">
 </head>
 
 <body class="bg-background min-h-screen flex flex-col">
@@ -17,8 +22,8 @@ require_once __DIR__ . '/bootstrap.php';
         try {
             loadPage();
         } catch (HttpException $e) {
-
             http_response_code($e->getStatusCode());
+            Logger::getInstance()->warning('HTTP Exception: ' . $e->getMessage(), ['status' => $e->getStatusCode()]);
 
             $statusCode = $e->getStatusCode();
             $errorView = __DIR__ . "/views/errors/{$statusCode}.php";
@@ -32,9 +37,12 @@ require_once __DIR__ . '/bootstrap.php';
                 echo $e->getMessage();
             }
         } catch (Throwable $e) {
-
             http_response_code(500);
-            error_log($e->getMessage());
+            Logger::getInstance()->error('Uncaught exception: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             require __DIR__ . "/views/errors/500.php";
         }
