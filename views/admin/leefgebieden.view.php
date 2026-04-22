@@ -17,6 +17,14 @@
 		</header>
 
 		<main class="page-wrap">
+			<?php if (!empty($data['error'])): ?>
+				<div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><?= htmlspecialchars((string) $data['error']) ?></div>
+			<?php endif; ?>
+
+			<?php if (!empty($data['success'])): ?>
+				<div class="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"><?= htmlspecialchars((string) $data['success']) ?></div>
+			<?php endif; ?>
+
 			<nav class="breadcrumbs" aria-label="Breadcrumb">
 				<a href="/admin">Dashboard</a>
 				<span>/</span>
@@ -29,7 +37,7 @@
 						<h2 class="panel-title">Overzicht gids_leefgebied</h2>
 						<p class="text-sm text-slate-600 mt-1">Veldkoppeling: <strong>LeefgebiedID</strong>, <strong>Naam_leefgebied</strong>, <strong>beschrijving_leefgebied</strong>, <strong>Sort_order</strong>.</p>
 					</div>
-					<a href="/leefgebieden/edit" class="btn" style="background:#A53714;color:#fff;">Nieuw leefgebied</a>
+					<a href="<?= htmlspecialchars(appUrl('leefgebied-edit')) ?>" class="btn" style="background:#A53714;color:#fff;">Nieuw leefgebied</a>
 				</div>
 
 				<div class="toolbar">
@@ -54,26 +62,23 @@
 							</tr>
 						</thead>
 						<tbody id="leefgebiedTableBody">
-							<tr data-search="1 wonen huisvesting en omgeving 10">
-								<td>1</td>
-								<td>Wonen</td>
-								<td>Huisvesting en omgeving.</td>
-								<td>10</td>
-								<td class="flex gap-2 py-2">
-									<a href="/leefgebieden/edit?id=1" class="btn btn-secondary">Bewerken</a>
-									<button type="button" class="btn btn-secondary">Verwijderen</button>
-								</td>
-							</tr>
-							<tr data-search="2 gezondheid lichamelijk en mentaal welzijn 20">
-								<td>2</td>
-								<td>Gezondheid</td>
-								<td>Lichamelijk en mentaal welzijn.</td>
-								<td>20</td>
-								<td class="flex gap-2 py-2">
-									<a href="/leefgebieden/edit?id=2" class="btn btn-secondary">Bewerken</a>
-									<button type="button" class="btn btn-secondary">Verwijderen</button>
-								</td>
-							</tr>
+							<?php if (!empty($data['items'])): ?>
+								<?php foreach ($data['items'] as $row): ?>
+									<tr data-search="<?= htmlspecialchars((string) ($row['search'] ?? '')) ?>">
+										<td><?= (int) ($row['id'] ?? 0) ?></td>
+										<td><?= htmlspecialchars((string) ($row['name'] ?? '')) ?></td>
+										<td><?= htmlspecialchars((string) ($row['description'] ?? '')) ?></td>
+										<td><?= (int) ($row['sort_order'] ?? 0) ?></td>
+										<td class="flex gap-2 py-2">
+											<a href="<?= htmlspecialchars((string) ($row['edit_url'] ?? appUrl('leefgebied-edit'))) ?>" class="btn btn-secondary">Bewerken</a>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							<?php else: ?>
+								<tr>
+									<td colspan="5" class="text-center py-4">Nog geen leefgebieden gevonden.</td>
+								</tr>
+							<?php endif; ?>
 						</tbody>
 					</table>
 				</div>

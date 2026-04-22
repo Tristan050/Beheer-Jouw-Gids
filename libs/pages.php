@@ -22,6 +22,10 @@ return [
             'controller' => 'LeefgebiedenController',
             'method' => 'edit',
         ],
+        'leefgebied-save' => [
+            'controller' => 'LeefgebiedenController',
+            'method' => 'save',
+        ],
         'functies' => [
             'controller' => 'FunctiesController',
             'method' => 'index',
