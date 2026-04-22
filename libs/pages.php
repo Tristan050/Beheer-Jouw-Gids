@@ -4,7 +4,7 @@ return [
     'routes' => [
         'admin' => [
             'controller' => 'HomeController',
-            'method' => 'admin',
+            'method' => 'index',
         ],
         'login' => [
             'controller' => 'AuthController',
@@ -14,9 +14,37 @@ return [
             'controller' => 'AuthController',
             'method' => 'logout',
         ],
-        'admin' => [
-            'controller' => 'HomeController',
+        'leefgebieden' => [
+            'controller' => 'LeefgebiedenController',
             'method' => 'index',
+        ],
+        'leefgebied-edit' => [
+            'controller' => 'LeefgebiedenController',
+            'method' => 'edit',
+        ],
+        'functies' => [
+            'controller' => 'FunctiesController',
+            'method' => 'index',
+        ],
+        'functie-edit' => [
+            'controller' => 'FunctiesController',
+            'method' => 'edit',
+        ],
+        'aandachtspunten' => [
+            'controller' => 'AandachtspuntenController',
+            'method' => 'index',
+        ],
+        'aandachtspunt-edit' => [
+            'controller' => 'AandachtspuntenController',
+            'method' => 'edit',
+        ],
+        'verdiepingsvragen' => [
+            'controller' => 'VerdiepingsvragenController',
+            'method' => 'index',
+        ],
+        'verdieping-vraag-edit' => [
+            'controller' => 'VerdiepingsvragenController',
+            'method' => 'edit',
         ],
         '404' => [
             'controller' => 'ErrorController',
