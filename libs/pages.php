@@ -34,6 +34,10 @@ return [
             'controller' => 'FunctiesController',
             'method' => 'edit',
         ],
+        'functie-save' => [
+            'controller' => 'FunctiesController',
+            'method' => 'save',
+        ],
         'aandachtspunten' => [
             'controller' => 'AandachtspuntenController',
             'method' => 'index',
