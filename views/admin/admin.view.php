@@ -1,8 +1,68 @@
+<?php
+$user = is_array($data['user'] ?? null) ? $data['user'] : [];
+$fullName = trim((string) ($user['first_name'] ?? '') . ' ' . (string) ($user['last_name'] ?? ''));
+$username = $fullName !== '' ? $fullName : 'Administrator';
+
+$dashboardUrl = appUrl('admin');
+$leefgebiedenUrl = appUrl('leefgebieden');
+$functiesUrl = appUrl('functies');
+$aandachtspuntenUrl = appUrl('aandachtspunten');
+$verdiepingsvragenUrl = appUrl('verdiepingsvragen');
+$logoutUrl = appUrl('logout');
+?>
+
 <div id="adminPanel" class="admin-shell">
-    <aside class="admin-sidebar" aria-label="Hoofdmenu">
-        <div class="sidebar-brand">Jouw-Gids Beheer</div>
-        <div class="sidebar-user">
-            Ingelogd als <strong id="usernameSidebar">Administrator</strong>
+    <aside class="admin-sidebar" aria-label="Hoofdmenu" style="display:flex; background:#A53714; color:#fff; border-right:none;">
+        <div class="sidebar-brand" style="color:#fff; display:flex; align-items:center; gap:10px;">
+            <i class="fas fa-cog" aria-hidden="true"></i>
+            <span>Beheerpagina</span>
+        </div>
+
+        <div class="sidebar-user" style="color:rgba(255,255,255,0.9);">
+            Ingelogd als <strong id="usernameSidebar" style="color:#fff;">Administrator</strong>
+        </div>
+
+        <nav class="space-y-2 mt-3" aria-label="Navigatie modules">
+            <a href="<?= htmlspecialchars($leefgebiedenUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.1); color:#fff; justify-content:flex-start; gap:10px;">
+                <i class="fas fa-folder-open" aria-hidden="true"></i>
+                <span>Pas onderwerpen aan</span>
+            </a>
+            <a href="<?= htmlspecialchars($dashboardUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.2); color:#fff; justify-content:flex-start; gap:10px;">
+                <i class="fas fa-home" aria-hidden="true"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="<?= htmlspecialchars($aandachtspuntenUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.1); color:#fff; justify-content:flex-start; gap:10px;">
+                <i class="fas fa-list-alt" aria-hidden="true"></i>
+                <span>Laatst gemaakte scans</span>
+            </a>
+            <a href="<?= htmlspecialchars($functiesUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.1); color:#fff; justify-content:flex-start; gap:10px;">
+                <i class="fas fa-database" aria-hidden="true"></i>
+                <span>Check scan data</span>
+            </a>
+            <a href="<?= htmlspecialchars($verdiepingsvragenUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.1); color:#fff; justify-content:flex-start; gap:10px;">
+                <i class="fas fa-chart-line" aria-hidden="true"></i>
+                <span>Vragenlijst data</span>
+            </a>
+        </nav>
+
+        <div style="margin-top:auto; border-top:1px solid rgba(255,255,255,0.2); padding-top:16px;">
+            <div style="display:flex; align-items:center; gap:10px; color:#fff; margin-bottom:12px;">
+                <span style="width:34px; height:34px; border-radius:9999px; background:rgba(255,255,255,0.2); display:inline-flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                </span>
+                <div>
+                    <div id="usernameSidebarBottom" style="font-weight:600; line-height:1.2;">Administrator</div>
+                    <div style="font-size:12px; opacity:0.85;">Administrator</div>
+                </div>
+            </div>
+
+            <form method="post" action="<?= htmlspecialchars($logoutUrl) ?>">
+                <?= CSRF::token() ?>
+                <button type="submit" class="btn w-full" style="background:rgba(255,255,255,0.14); color:#fff; gap:8px;">
+                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                    <span>Uitloggen</span>
+                </button>
+            </form>
         </div>
     </aside>
 
@@ -13,7 +73,7 @@
 
         <main class="page-wrap">
             <nav class="breadcrumbs" aria-label="Breadcrumb">
-                <a href="/admin">Dashboard</a>
+                <a href="<?= htmlspecialchars($dashboardUrl) ?>">Dashboard</a>
                 <span>/</span>
                 <span class="current">Overzicht</span>
             </nav>
@@ -24,6 +84,19 @@
                     <p class="page-subtitle">Hier zie je direct de belangrijkste trends, bezoeken en scanactiviteit.</p>
                 </div>
             </div>
+
+            <section class="panel" aria-label="Snelnavigatie beheer" style="margin-top: 12px;">
+                <div class="panel-header">
+                    <h3 class="panel-title">Snel naar beheeronderdelen</h3>
+                    <span class="badge badge-secondary">Alle modules</span>
+                </div>
+                <div class="toolbar-actions" style="width:100%;">
+                    <a href="<?= htmlspecialchars($leefgebiedenUrl) ?>" class="btn btn-secondary" style="justify-content:flex-start; gap:8px;"><i class="fas fa-folder-open" aria-hidden="true"></i><span>Leefgebieden</span></a>
+                    <a href="<?= htmlspecialchars($functiesUrl) ?>" class="btn btn-secondary" style="justify-content:flex-start; gap:8px;"><i class="fas fa-database" aria-hidden="true"></i><span>Functies</span></a>
+                    <a href="<?= htmlspecialchars($aandachtspuntenUrl) ?>" class="btn btn-secondary" style="justify-content:flex-start; gap:8px;"><i class="fas fa-list-alt" aria-hidden="true"></i><span>Aandachtspunten</span></a>
+                    <a href="<?= htmlspecialchars($verdiepingsvragenUrl) ?>" class="btn btn-secondary" style="justify-content:flex-start; gap:8px;"><i class="fas fa-chart-line" aria-hidden="true"></i><span>Verdiepingsvragen</span></a>
+                </div>
+            </section>
 
             <section class="stats-grid" aria-label="Kernstatistieken">
                 <article class="metric-card" aria-label="Unieke bezoekers">
@@ -96,7 +169,7 @@
                 </article>
             </section>
 
-            <section class="panel" aria-label="Recente bezoeken">
+            <section class="panel" aria-label="Recente bezoeken" id="recente-bezoeken">
                 <div class="panel-header">
                     <h3 class="panel-title">Recente bezoeken</h3>
                     <span class="badge badge-primary" id="visitCountBadge">0 momenten</span>
@@ -132,7 +205,7 @@
 
 <script>
     const adminData = {
-        username: 'Administrator',
+        username: <?= json_encode($username, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
         stats: {
             uniekeBezoekers: 1284,
             nieuweScansVandaag: 37,
@@ -198,6 +271,7 @@
         const username = String(adminData.username || 'Administrator');
         setText('usernameDisplay', username);
         setText('usernameSidebar', username);
+        setText('usernameSidebarBottom', username);
     }
 
     function renderVisits() {
