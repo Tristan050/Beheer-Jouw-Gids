@@ -1,40 +1,25 @@
 <?php
 
-class LeefgebiedRepository
+class LeefgebiedRepository extends BaseRepository
 {
-    public function getAll(): array
+    protected function tableName(): string
     {
-        $result = execSQL(
-            'SELECT LeefgebiedID, Naam_leefgebied, beschrijving_leefgebied, Sort_order FROM gids_leefgebied ORDER BY Sort_order ASC, LeefgebiedID ASC',
-            [],
-            false
-        );
-
-        if (!$result) {
-            return [];
-        }
-
-        $items = [];
-        while ($row = $result->fetch_assoc()) {
-            $items[] = $this->mapRow($row);
-        }
-
-        return $items;
+        return 'gids_leefgebied';
     }
 
-    public function findById(int $id): ?array
+    protected function idColumn(): string
     {
-        $result = execSQL(
-            'SELECT LeefgebiedID, Naam_leefgebied, beschrijving_leefgebied, Sort_order FROM gids_leefgebied WHERE LeefgebiedID = ? LIMIT 1',
-            ['i', $id],
-            false
-        );
+        return 'LeefgebiedID';
+    }
 
-        if (!$result || $result->num_rows === 0) {
-            return null;
-        }
+    public function getAll(): array
+    {
+        return $this->getAllRows();
+    }
 
-        return $this->mapRow($result->fetch_assoc());
+    public function findById(int $id): ?LeefgebiedDTO
+    {
+        return $this->getRowById($id);
     }
 
     public function create(string $name, string $description, int $sortOrder): int
@@ -57,20 +42,16 @@ class LeefgebiedRepository
 
     public function delete(int $id): int
     {
-        return (int) execSQL(
-            'DELETE FROM gids_leefgebied WHERE LeefgebiedID = ?',
-            ['i', $id],
-            true
-        );
+        return $this->deleteRowById($id);
     }
 
-    private function mapRow(array $row): array
+    protected function mapRow(array $row): LeefgebiedDTO
     {
-        return [
-            'id' => (int) ($row['LeefgebiedID'] ?? 0),
-            'name' => (string) ($row['Naam_leefgebied'] ?? ''),
-            'description' => (string) ($row['beschrijving_leefgebied'] ?? ''),
-            'sort_order' => (int) ($row['Sort_order'] ?? 0),
-        ];
+        return new LeefgebiedDTO(
+            (int) ($row['LeefgebiedID'] ?? 0),
+            (string) ($row['Naam_leefgebied'] ?? ''),
+            (string) ($row['beschrijving_leefgebied'] ?? ''),
+            (int) ($row['Sort_order'] ?? 0)
+        );
     }
 }

@@ -1,40 +1,25 @@
 <?php
 
-class FunctieRepository
+class FunctieRepository extends BaseRepository
 {
-    public function getAll(): array
+    protected function tableName(): string
     {
-        $result = execSQL(
-            'SELECT FunctieID, LeefgebiedID, Naam_functie, Beschrijving_functie, Sort_order FROM gids_functie ORDER BY Sort_order ASC, FunctieID ASC',
-            [],
-            false
-        );
-
-        if (!$result) {
-            return [];
-        }
-
-        $items = [];
-        while ($row = $result->fetch_assoc()) {
-            $items[] = $this->mapRow($row);
-        }
-
-        return $items;
+        return 'gids_functie';
     }
 
-    public function findById(int $id): ?array
+    protected function idColumn(): string
     {
-        $result = execSQL(
-            'SELECT FunctieID, LeefgebiedID, Naam_functie, Beschrijving_functie, Sort_order FROM gids_functie WHERE FunctieID = ? LIMIT 1',
-            ['i', $id],
-            false
-        );
+        return 'FunctieID';
+    }
 
-        if (!$result || $result->num_rows === 0) {
-            return null;
-        }
+    public function getAll(): array
+    {
+        return $this->getAllRows();
+    }
 
-        return $this->mapRow($result->fetch_assoc());
+    public function findById(int $id): ?FunctieDTO
+    {
+        return $this->getRowById($id);
     }
 
     public function create(int $leefgebiedId, string $name, string $description, int $sortOrder): int
@@ -57,21 +42,17 @@ class FunctieRepository
 
     public function delete(int $id): int
     {
-        return (int) execSQL(
-            'DELETE FROM gids_functie WHERE FunctieID = ?',
-            ['i', $id],
-            true
-        );
+        return $this->deleteRowById($id);
     }
 
-    private function mapRow(array $row): array
+    protected function mapRow(array $row): FunctieDTO
     {
-        return [
-            'id' => (int) ($row['FunctieID'] ?? 0),
-            'leefgebied_id' => (int) ($row['LeefgebiedID'] ?? 0),
-            'name' => (string) ($row['Naam_functie'] ?? ''),
-            'description' => (string) ($row['Beschrijving_functie'] ?? ''),
-            'sort_order' => (int) ($row['Sort_order'] ?? 0),
-        ];
+        return new FunctieDTO(
+            (int) ($row['FunctieID'] ?? 0),
+            (int) ($row['LeefgebiedID'] ?? 0),
+            (string) ($row['Naam_functie'] ?? ''),
+            (string) ($row['Beschrijving_functie'] ?? ''),
+            (int) ($row['Sort_order'] ?? 0)
+        );
     }
 }

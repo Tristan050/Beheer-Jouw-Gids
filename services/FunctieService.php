@@ -11,26 +11,26 @@ class FunctieService
 
     public function getLeefgebiedOptions(): array
     {
-        $rows = $this->leefgebiedRepository->getAll();
+        $items = $this->leefgebiedRepository->getAll();
 
-        return array_map(static function (array $row): array {
+        return array_map(static function (LeefgebiedDTO $item): array {
             return [
-                'id' => (int) ($row['id'] ?? 0),
-                'name' => (string) ($row['name'] ?? ''),
+                'id' => $item->id,
+                'name' => $item->name,
             ];
-        }, $rows);
+        }, $items);
     }
 
     public function getIndexItems(): array
     {
-        $rows = $this->repository->getAll();
+        $items = $this->repository->getAll();
 
-        return array_map(function (array $row): array {
-            $id = (int) ($row['id'] ?? 0);
-            $leefgebiedId = (int) ($row['leefgebied_id'] ?? 0);
-            $name = (string) ($row['name'] ?? '');
-            $description = (string) ($row['description'] ?? '');
-            $sortOrder = (int) ($row['sort_order'] ?? 0);
+        return array_map(function (FunctieDTO $item): array {
+            $id = $item->id;
+            $leefgebiedId = $item->leefgebiedId;
+            $name = $item->name;
+            $description = $item->description;
+            $sortOrder = $item->sortOrder;
 
             return [
                 'id' => $id,
@@ -41,10 +41,10 @@ class FunctieService
                 'search' => strtolower(trim($id . ' ' . $leefgebiedId . ' ' . $name . ' ' . $description . ' ' . $sortOrder)),
                 'edit_url' => appUrl('functie-edit') . '?id=' . $id,
             ];
-        }, $rows);
+        }, $items);
     }
 
-    public function getById(int $id): ?array
+    public function getById(int $id): ?FunctieDTO
     {
         if ($id <= 0) {
             return null;
@@ -53,14 +53,14 @@ class FunctieService
         return $this->repository->findById($id);
     }
 
-    public function getFormValues(?array $item): array
+    public function getFormValues(?FunctieDTO $item): array
     {
         return [
-            'FunctieID' => old('FunctieID', $item !== null ? (string) $item['id'] : ''),
-            'LeefgebiedID' => old('LeefgebiedID', $item !== null ? (string) $item['leefgebied_id'] : ''),
-            'Naam_functie' => old('Naam_functie', $item !== null ? (string) $item['name'] : ''),
-            'Beschrijving_functie' => old('Beschrijving_functie', $item !== null ? (string) $item['description'] : ''),
-            'Sort_order' => old('Sort_order', $item !== null ? (string) $item['sort_order'] : '0'),
+            'FunctieID' => old('FunctieID', $item !== null ? (string) $item->id : ''),
+            'LeefgebiedID' => old('LeefgebiedID', $item !== null ? (string) $item->leefgebiedId : ''),
+            'Naam_functie' => old('Naam_functie', $item !== null ? $item->name : ''),
+            'Beschrijving_functie' => old('Beschrijving_functie', $item !== null ? $item->description : ''),
+            'Sort_order' => old('Sort_order', $item !== null ? (string) $item->sortOrder : '0'),
         ];
     }
 

@@ -8,26 +8,22 @@ class LeefgebiedService
 
     public function getIndexItems(): array
     {
-        $rows = $this->repository->getAll();
+        $items = $this->repository->getAll();
 
-        return array_map(function (array $row): array {
-            $id = (int) ($row['id'] ?? 0);
-            $name = (string) ($row['name'] ?? '');
-            $description = (string) ($row['description'] ?? '');
-            $sortOrder = (int) ($row['sort_order'] ?? 0);
+        return array_map(function (LeefgebiedDTO $dto): array {
 
             return [
-                'id' => $id,
-                'name' => $name,
-                'description' => $description,
-                'sort_order' => $sortOrder,
-                'search' => strtolower(trim($id . ' ' . $name . ' ' . $description . ' ' . $sortOrder)),
-                'edit_url' => appUrl('leefgebied-edit') . '?id=' . $id,
+                'id' => $dto->id,
+                'name' => $dto->name,
+                'description' => $dto->description,
+                'sort_order' => $dto->sortOrder,
+                'search' => strtolower(trim($dto->id . ' ' . $dto->name . ' ' . $dto->description . ' ' . $dto->sortOrder)),
+                'edit_url' => appUrl('leefgebied-edit') . '?id=' . $dto->id,
             ];
-        }, $rows);
+        }, $items);
     }
 
-    public function getById(int $id): ?array
+    public function getById(int $id): ?LeefgebiedDTO
     {
         if ($id <= 0) {
             return null;
@@ -36,13 +32,13 @@ class LeefgebiedService
         return $this->repository->findById($id);
     }
 
-    public function getFormValues(?array $item): array
+    public function getFormValues(?LeefgebiedDTO $item): array
     {
         return [
-            'LeefgebiedID' => old('LeefgebiedID', $item !== null ? (string) $item['id'] : ''),
-            'Naam_leefgebied' => old('Naam_leefgebied', $item !== null ? (string) $item['name'] : ''),
-            'beschrijving_leefgebied' => old('beschrijving_leefgebied', $item !== null ? (string) $item['description'] : ''),
-            'Sort_order' => old('Sort_order', $item !== null ? (string) $item['sort_order'] : '0'),
+            'LeefgebiedID' => old('LeefgebiedID', $item !== null ? (string) $item->id : ''),
+            'Naam_leefgebied' => old('Naam_leefgebied', $item !== null ? $item->name : ''),
+            'beschrijving_leefgebied' => old('beschrijving_leefgebied', $item !== null ? $item->description : ''),
+            'Sort_order' => old('Sort_order', $item !== null ? (string) $item->sortOrder : '0'),
         ];
     }
 
@@ -71,7 +67,7 @@ class LeefgebiedService
         }
 
         if ($id > 0) {
-            $existing = $this->repository->findById($id);
+            $existing = $this->getById($id);
             if ($existing === null) {
                 clearOldInput();
 

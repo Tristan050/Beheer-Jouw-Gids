@@ -54,6 +54,14 @@ return [
             'controller' => 'AandachtspuntenController',
             'method' => 'edit',
         ],
+        'aandachtspunt-save' => [
+            'controller' => 'AandachtspuntenController',
+            'method' => 'save',
+        ],
+        'aandachtspunt-delete' => [
+            'controller' => 'AandachtspuntenController',
+            'method' => 'delete',
+        ],
         'verdiepingsvragen' => [
             'controller' => 'VerdiepingsvragenController',
             'method' => 'index',
