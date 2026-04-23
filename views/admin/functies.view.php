@@ -73,6 +73,11 @@
 										<td><?= (int) ($row['sort_order'] ?? 0) ?></td>
 										<td class="flex gap-2 py-2">
 											<a href="<?= htmlspecialchars((string) ($row['edit_url'] ?? appUrl('functie-edit'))) ?>" class="btn btn-secondary">Bewerken</a>
+											<form method="post" action="<?= htmlspecialchars(appUrl('functie-delete')) ?>" onsubmit="return confirm('Weet je zeker dat je deze functie wilt verwijderen?');" style="display:inline;">
+												<?= CSRF::token() ?>
+												<input type="hidden" name="FunctieID" value="<?= (int) ($row['id'] ?? 0) ?>">
+												<button type="submit" class="btn btn-secondary">Verwijderen</button>
+											</form>
 										</td>
 									</tr>
 								<?php endforeach; ?>

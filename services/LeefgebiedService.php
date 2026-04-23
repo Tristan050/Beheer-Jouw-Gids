@@ -104,4 +104,46 @@ class LeefgebiedService
             'redirect' => appUrl('leefgebieden'),
         ];
     }
+
+    public function delete(array $input): array
+    {
+        $id = (int) ($input['LeefgebiedID'] ?? 0);
+
+        if ($id <= 0) {
+            return [
+                'ok' => false,
+                'flash_key' => 'leefgebieden_error',
+                'message' => 'Ongeldig leefgebied geselecteerd.',
+                'redirect' => appUrl('leefgebieden'),
+            ];
+        }
+
+        $existing = $this->repository->findById($id);
+        if ($existing === null) {
+            return [
+                'ok' => false,
+                'flash_key' => 'leefgebieden_error',
+                'message' => 'Leefgebied niet gevonden.',
+                'redirect' => appUrl('leefgebieden'),
+            ];
+        }
+
+        $affectedRows = $this->repository->delete($id);
+
+        if ($affectedRows < 1) {
+            return [
+                'ok' => false,
+                'flash_key' => 'leefgebieden_error',
+                'message' => 'Leefgebied kon niet worden verwijderd.',
+                'redirect' => appUrl('leefgebieden'),
+            ];
+        }
+
+        return [
+            'ok' => true,
+            'flash_key' => 'leefgebieden_success',
+            'message' => 'Leefgebied succesvol verwijderd.',
+            'redirect' => appUrl('leefgebieden'),
+        ];
+    }
 }

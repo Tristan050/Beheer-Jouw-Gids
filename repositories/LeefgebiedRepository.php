@@ -55,6 +55,15 @@ class LeefgebiedRepository
         );
     }
 
+    public function delete(int $id): int
+    {
+        return (int) execSQL(
+            'DELETE FROM gids_leefgebied WHERE LeefgebiedID = ?',
+            ['i', $id],
+            true
+        );
+    }
+
     private function mapRow(array $row): array
     {
         return [

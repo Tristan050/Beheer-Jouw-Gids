@@ -33,6 +33,7 @@ class FunctiesController extends BaseController
             'item' => $item,
             'form_error' => getFlash('functies_form_error'),
             'form_values' => $this->service->getFormValues($item),
+            'leefgebieden' => $this->service->getLeefgebiedOptions(),
         ]);
 
         clearOldInput();
@@ -50,6 +51,22 @@ class FunctiesController extends BaseController
         CSRF::check();
 
         $result = $this->service->save($_POST);
+        setFlash((string) $result['flash_key'], (string) $result['message']);
+        redirect((string) $result['redirect']);
+    }
+
+    public function delete(): void
+    {
+        $this->auth();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            throw new HttpException(405, 'Methode niet toegestaan');
+        }
+
+        CSRF::check();
+
+        $result = $this->service->delete($_POST);
         setFlash((string) $result['flash_key'], (string) $result['message']);
         redirect((string) $result['redirect']);
     }

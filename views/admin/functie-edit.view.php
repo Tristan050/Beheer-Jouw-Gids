@@ -29,7 +29,18 @@
 
 					<div>
 						<label for="LeefgebiedID" class="block text-sm font-semibold mb-1">LeefgebiedID *</label>
-						<input type="number" name="LeefgebiedID" id="LeefgebiedID" class="search-input" min="1" step="1" placeholder="Koppeling naar gids_leefgebied" value="<?= htmlspecialchars((string) ($data['form_values']['LeefgebiedID'] ?? '')) ?>" required>
+						<select name="LeefgebiedID" id="LeefgebiedID" class="search-input" required>
+							<option value="">Selecteer een leefgebied</option>
+							<?php foreach (($data['leefgebieden'] ?? []) as $leefgebied): ?>
+								<?php
+								$optionId = (int) ($leefgebied['id'] ?? 0);
+								$selectedLeefgebiedId = (int) ($data['form_values']['LeefgebiedID'] ?? 0);
+								?>
+								<option value="<?= $optionId ?>" <?= $selectedLeefgebiedId === $optionId ? 'selected' : '' ?>>
+									<?= htmlspecialchars((string) ($leefgebied['name'] ?? '')) ?>
+								</option>
+							<?php endforeach; ?>
+						</select>
 					</div>
 
 					<div>

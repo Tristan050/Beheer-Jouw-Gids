@@ -53,4 +53,20 @@ class LeefgebiedenController extends BaseController
         setFlash((string) $result['flash_key'], (string) $result['message']);
         redirect((string) $result['redirect']);
     }
+
+    public function delete(): void
+    {
+        $this->auth();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            throw new HttpException(405, 'Methode niet toegestaan');
+        }
+
+        CSRF::check();
+
+        $result = $this->service->delete($_POST);
+        setFlash((string) $result['flash_key'], (string) $result['message']);
+        redirect((string) $result['redirect']);
+    }
 }

@@ -55,6 +55,15 @@ class FunctieRepository
         );
     }
 
+    public function delete(int $id): int
+    {
+        return (int) execSQL(
+            'DELETE FROM gids_functie WHERE FunctieID = ?',
+            ['i', $id],
+            true
+        );
+    }
+
     private function mapRow(array $row): array
     {
         return [

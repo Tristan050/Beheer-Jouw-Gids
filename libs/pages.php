@@ -26,6 +26,10 @@ return [
             'controller' => 'LeefgebiedenController',
             'method' => 'save',
         ],
+        'leefgebied-delete' => [
+            'controller' => 'LeefgebiedenController',
+            'method' => 'delete',
+        ],
         'functies' => [
             'controller' => 'FunctiesController',
             'method' => 'index',
@@ -37,6 +41,10 @@ return [
         'functie-save' => [
             'controller' => 'FunctiesController',
             'method' => 'save',
+        ],
+        'functie-delete' => [
+            'controller' => 'FunctiesController',
+            'method' => 'delete',
         ],
         'aandachtspunten' => [
             'controller' => 'AandachtspuntenController',

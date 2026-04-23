@@ -2,8 +2,23 @@
 
 class FunctieService
 {
-    public function __construct(private readonly FunctieRepository $repository = new FunctieRepository())
+    public function __construct(
+        private readonly FunctieRepository $repository = new FunctieRepository(),
+        private readonly LeefgebiedRepository $leefgebiedRepository = new LeefgebiedRepository()
+    )
     {
+    }
+
+    public function getLeefgebiedOptions(): array
+    {
+        $rows = $this->leefgebiedRepository->getAll();
+
+        return array_map(static function (array $row): array {
+            return [
+                'id' => (int) ($row['id'] ?? 0),
+                'name' => (string) ($row['name'] ?? ''),
+            ];
+        }, $rows);
     }
 
     public function getIndexItems(): array
@@ -72,7 +87,16 @@ class FunctieService
             return [
                 'ok' => false,
                 'flash_key' => 'functies_form_error',
-                'message' => 'LeefgebiedID is verplicht.',
+                'message' => 'Selecteer een leefgebied.',
+                'redirect' => appUrl('functie-edit') . ($id > 0 ? '?id=' . $id : ''),
+            ];
+        }
+
+        if ($this->leefgebiedRepository->findById($leefgebiedId) === null) {
+            return [
+                'ok' => false,
+                'flash_key' => 'functies_form_error',
+                'message' => 'Geselecteerd leefgebied bestaat niet.',
                 'redirect' => appUrl('functie-edit') . ($id > 0 ? '?id=' . $id : ''),
             ];
         }
@@ -117,6 +141,48 @@ class FunctieService
             'ok' => true,
             'flash_key' => 'functies_success',
             'message' => 'Functie succesvol toegevoegd (ID: ' . $newId . ').',
+            'redirect' => appUrl('functies'),
+        ];
+    }
+
+    public function delete(array $input): array
+    {
+        $id = (int) ($input['FunctieID'] ?? 0);
+
+        if ($id <= 0) {
+            return [
+                'ok' => false,
+                'flash_key' => 'functies_error',
+                'message' => 'Ongeldige functie geselecteerd.',
+                'redirect' => appUrl('functies'),
+            ];
+        }
+
+        $existing = $this->repository->findById($id);
+        if ($existing === null) {
+            return [
+                'ok' => false,
+                'flash_key' => 'functies_error',
+                'message' => 'Functie niet gevonden.',
+                'redirect' => appUrl('functies'),
+            ];
+        }
+
+        $affectedRows = $this->repository->delete($id);
+
+        if ($affectedRows < 1) {
+            return [
+                'ok' => false,
+                'flash_key' => 'functies_error',
+                'message' => 'Functie kon niet worden verwijderd.',
+                'redirect' => appUrl('functies'),
+            ];
+        }
+
+        return [
+            'ok' => true,
+            'flash_key' => 'functies_success',
+            'message' => 'Functie succesvol verwijderd.',
             'redirect' => appUrl('functies'),
         ];
     }
