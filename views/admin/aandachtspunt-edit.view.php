@@ -20,7 +20,7 @@
             <section class="panel" style="max-width: 980px; border-color:#e4dcf2;">
                 <div class="panel-header">
                     <h2 class="panel-title">Formulier gids_aandachtspunt</h2>
-                    <span class="badge badge-primary"><?php echo !empty($data['form_values']['AandachtspuntID']) ? 'Bewerken' : 'Nieuw'; ?></span>
+                    <span class="badge badge-primary"><?= !empty($data['form_values']['AandachtspuntID']) ? 'Bewerken' : 'Nieuw'; ?></span>
                 </div>
 
                 <form id="aandachtspuntForm" method="post" action="<?= htmlspecialchars(appUrl('aandachtspunt-save')) ?>" class="space-y-4" data-table="gids_aandachtspunt">

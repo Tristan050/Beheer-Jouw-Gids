@@ -20,7 +20,7 @@
 			<section class="panel" style="max-width: 900px; border-color:#f1d9cc;">
 				<div class="panel-header">
 					<h2 class="panel-title">Formulier gids_leefgebied</h2>
-					<span class="badge badge-primary"><?php echo !empty($data['form_values']['LeefgebiedID']) ? 'Bewerken' : 'Nieuw'; ?></span>
+					<span class="badge badge-primary"><?= !empty($data['form_values']['LeefgebiedID']) ? 'Bewerken' : 'Nieuw'; ?></span>
 				</div>
 
 				<form id="leefgebiedForm" method="post" action="<?= htmlspecialchars(appUrl('leefgebied-save')) ?>" class="space-y-4" data-table="gids_leefgebied">

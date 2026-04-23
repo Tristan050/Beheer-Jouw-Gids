@@ -70,6 +70,14 @@ return [
             'controller' => 'VerdiepingsvragenController',
             'method' => 'edit',
         ],
+        'verdieping-vraag-save' => [
+            'controller' => 'VerdiepingsvragenController',
+            'method' => 'save',
+        ],
+        'verdieping-vraag-delete' => [
+            'controller' => 'VerdiepingsvragenController',
+            'method' => 'delete',
+        ],
         '404' => [
             'controller' => 'ErrorController',
             'method' => 'notFound',

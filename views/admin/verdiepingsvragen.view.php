@@ -17,6 +17,14 @@
 		</header>
 
 		<main class="page-wrap">
+			<?php if (!empty($data['error'])): ?>
+				<div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><?= htmlspecialchars((string) $data['error']) ?></div>
+			<?php endif; ?>
+
+			<?php if (!empty($data['success'])): ?>
+				<div class="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"><?= htmlspecialchars((string) $data['success']) ?></div>
+			<?php endif; ?>
+
 			<nav class="breadcrumbs" aria-label="Breadcrumb">
 				<a href="/admin">Dashboard</a>
 				<span>/</span>
@@ -29,13 +37,13 @@
 						<h2 class="panel-title">Overzicht gids_verdieping_vragen</h2>
 						<p class="text-sm text-slate-600 mt-1">Veldkoppeling: <strong>VerdiepingsvraagID</strong>, <strong>Vraag</strong>, <strong>AandachtspuntID</strong>.</p>
 					</div>
-					<a href="/verdiepingsvragen/edit" class="btn" style="background:#0f6d99;color:#fff;">Nieuwe vraag</a>
+					<a href="<?= htmlspecialchars(appUrl('verdieping-vraag-edit')) ?>" class="btn" style="background:#0f6d99;color:#fff;">Nieuwe vraag</a>
 				</div>
 
 				<div class="toolbar">
 					<div class="toolbar-actions">
 						<div class="search-wrap" style="flex:1;">
-							<input id="verdiepingSearchInput" type="text" class="search-input" placeholder="Zoek op vraag of aandachtspuntID..." />
+							<input id="verdiepingSearchInput" type="text" class="search-input" placeholder="Zoek op vraag of aandachtspunt..." />
 							<span class="search-icon" aria-hidden="true">&#128269;</span>
 						</div>
 						<button type="button" class="btn btn-secondary" onclick="document.getElementById('verdiepingSearchInput').value=''; filterVerdiepingsvragen();">Wissen</button>
@@ -48,29 +56,32 @@
 							<tr>
 								<th>VerdiepingsvraagID</th>
 								<th>Vraag</th>
-								<th>AandachtspuntID</th>
+								<th>Aandachtspunt</th>
 								<th>Acties</th>
 							</tr>
 						</thead>
 						<tbody id="verdiepingTableBody">
-							<tr data-search="1 wat is al geprobeerd 1">
-								<td>1</td>
-								<td>Wat is al geprobeerd om dit aan te pakken?</td>
-								<td>1</td>
-								<td class="flex gap-2 py-2">
-									<a href="/verdiepingsvragen/edit?id=1" class="btn btn-secondary">Bewerken</a>
-									<button type="button" class="btn btn-secondary">Verwijderen</button>
-								</td>
-							</tr>
-							<tr data-search="2 wie in het netwerk kan ondersteunen 2">
-								<td>2</td>
-								<td>Wie in het netwerk kan hier ondersteuning bieden?</td>
-								<td>2</td>
-								<td class="flex gap-2 py-2">
-									<a href="/verdiepingsvragen/edit?id=2" class="btn btn-secondary">Bewerken</a>
-									<button type="button" class="btn btn-secondary">Verwijderen</button>
-								</td>
-							</tr>
+							<?php if (!empty($data['items'])): ?>
+								<?php foreach ($data['items'] as $row): ?>
+									<tr data-search="<?= htmlspecialchars((string) ($row['search'] ?? '')) ?>">
+										<td><?= (int) ($row['id'] ?? 0) ?></td>
+										<td><?= htmlspecialchars((string) ($row['vraag'] ?? '')) ?></td>
+										<td><?= htmlspecialchars((string) ($row['aandachtspunt_name'] ?? '')) ?></td>
+										<td class="flex gap-2 py-2">
+											<a href="<?= htmlspecialchars((string) ($row['edit_url'] ?? appUrl('verdieping-vraag-edit'))) ?>" class="btn btn-secondary">Bewerken</a>
+											<form method="post" action="<?= htmlspecialchars(appUrl('verdieping-vraag-delete')) ?>" onsubmit="return confirm('Weet je zeker dat je deze verdiepingsvraag wilt verwijderen?');" style="display:inline;">
+												<?= CSRF::token() ?>
+												<input type="hidden" name="VerdiepingsvraagID" value="<?= (int) ($row['id'] ?? 0) ?>">
+												<button type="submit" class="btn btn-secondary">Verwijderen</button>
+											</form>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							<?php else: ?>
+								<tr>
+									<td colspan="4" class="text-center py-4">Nog geen verdiepingsvragen gevonden.</td>
+								</tr>
+							<?php endif; ?>
 						</tbody>
 					</table>
 				</div>
