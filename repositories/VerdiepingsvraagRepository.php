@@ -42,6 +42,12 @@ class VerdiepingsvraagRepository extends BaseRepository
 
     public function delete(int $id): int
     {
+        execSQL(
+            'DELETE FROM gids_verdieping_koppeltabel WHERE VerdiepingsvraagID = ?',
+            ['i', $id],
+            true
+        );
+
         return $this->deleteRowById($id);
     }
 

@@ -78,6 +78,34 @@ return [
             'controller' => 'VerdiepingsvragenController',
             'method' => 'delete',
         ],
+        'organisaties' => [
+            'controller' => 'OrganisatiesController',
+            'method' => 'index',
+        ],
+        'organisatie-edit' => [
+            'controller' => 'OrganisatiesController',
+            'method' => 'edit',
+        ],
+        'organisatie-save' => [
+            'controller' => 'OrganisatiesController',
+            'method' => 'save',
+        ],
+        'organisatie-delete' => [
+            'controller' => 'OrganisatiesController',
+            'method' => 'delete',
+        ],
+        'verdieping-koppelingen' => [
+            'controller' => 'VerdiepingKoppelingenController',
+            'method' => 'index',
+        ],
+        'verdieping-koppeling-save' => [
+            'controller' => 'VerdiepingKoppelingenController',
+            'method' => 'save',
+        ],
+        'verdieping-koppeling-delete' => [
+            'controller' => 'VerdiepingKoppelingenController',
+            'method' => 'delete',
+        ],
         '404' => [
             'controller' => 'ErrorController',
             'method' => 'notFound',
