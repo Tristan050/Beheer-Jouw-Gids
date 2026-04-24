@@ -8,6 +8,9 @@ $leefgebiedenUrl = appUrl('leefgebieden');
 $functiesUrl = appUrl('functies');
 $aandachtspuntenUrl = appUrl('aandachtspunten');
 $verdiepingsvragenUrl = appUrl('verdiepingsvragen');
+$vragenlijstenUrl = appUrl('vragenlijsten');
+$organisatiesUrl = appUrl('organisaties');
+$verdiepingKoppelingenUrl = appUrl('verdieping-koppelingen');
 $logoutUrl = appUrl('logout');
 ?>
 
@@ -39,7 +42,7 @@ $logoutUrl = appUrl('logout');
                 <i class="fas fa-database" aria-hidden="true"></i>
                 <span>Check scan data</span>
             </a>
-            <a href="<?= htmlspecialchars($verdiepingsvragenUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.1); color:#fff; justify-content:flex-start; gap:10px;">
+            <a href="<?= htmlspecialchars($vragenlijstenUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.1); color:#fff; justify-content:flex-start; gap:10px;">
                 <i class="fas fa-chart-line" aria-hidden="true"></i>
                 <span>Vragenlijst data</span>
             </a>
@@ -95,6 +98,7 @@ $logoutUrl = appUrl('logout');
                     <a href="<?= htmlspecialchars($functiesUrl) ?>" class="btn btn-secondary" style="justify-content:flex-start; gap:8px;"><i class="fas fa-database" aria-hidden="true"></i><span>Functies</span></a>
                     <a href="<?= htmlspecialchars($aandachtspuntenUrl) ?>" class="btn btn-secondary" style="justify-content:flex-start; gap:8px;"><i class="fas fa-list-alt" aria-hidden="true"></i><span>Aandachtspunten</span></a>
                     <a href="<?= htmlspecialchars($verdiepingsvragenUrl) ?>" class="btn btn-secondary" style="justify-content:flex-start; gap:8px;"><i class="fas fa-chart-line" aria-hidden="true"></i><span>Verdiepingsvragen</span></a>
+                    <a href="<?= htmlspecialchars($vragenlijstenUrl) ?>" class="btn btn-secondary" style="justify-content:flex-start; gap:8px;"><i class="fas fa-list" aria-hidden="true"></i><span>Vragenlijsten</span></a>
                     <a href="<?= htmlspecialchars($organisatiesUrl) ?>" class="btn btn-secondary" style="justify-content:flex-start; gap:8px;"><i class="fas fa-building" aria-hidden="true"></i><span>Organisaties</span></a>
                     <a href="<?= htmlspecialchars($verdiepingKoppelingenUrl) ?>" class="btn btn-secondary" style="justify-content:flex-start; gap:8px;"><i class="fas fa-link" aria-hidden="true"></i><span>Verdieping koppelingen</span></a>
                 </div>

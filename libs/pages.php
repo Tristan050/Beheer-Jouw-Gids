@@ -106,6 +106,22 @@ return [
             'controller' => 'VerdiepingKoppelingenController',
             'method' => 'delete',
         ],
+        'vragenlijsten' => [
+            'controller' => 'VragenlijstenController',
+            'method' => 'index',
+        ],
+        'vragenlijst-vraag-edit' => [
+            'controller' => 'VragenlijstenController',
+            'method' => 'editVraag',
+        ],
+        'vragenlijst-vraag-save' => [
+            'controller' => 'VragenlijstenController',
+            'method' => 'saveVraag',
+        ],
+        'vragenlijst-vraag-delete' => [
+            'controller' => 'VragenlijstenController',
+            'method' => 'deleteVraag',
+        ],
         '404' => [
             'controller' => 'ErrorController',
             'method' => 'notFound',
