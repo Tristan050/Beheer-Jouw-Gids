@@ -14,6 +14,14 @@ return [
             'controller' => 'AuthController',
             'method' => 'logout',
         ],
+        'otp-verify' => [
+            'controller' => 'OTPController',
+            'method' => 'verifyCode',
+        ],
+        'otp-logout' => [
+            'controller' => 'OTPController',
+            'method' => 'logout',
+        ],
         'leefgebieden' => [
             'controller' => 'LeefgebiedenController',
             'method' => 'index',

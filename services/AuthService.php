@@ -64,13 +64,10 @@ class AuthService
 
         $this->rateLimitService->clearAttempts($rateLimitKey);
 
-        session_regenerate_id(true);
-
-        $_SESSION['user_id'] = (int) $user['id'];
-        $_SESSION['user_roles'] = $user['roles'] ?? [];
-        $_SESSION['user_verified'] = (bool) ($user['is_verified'] ?? false);
-
-        return true;
+        return [
+            'success' => true,
+            'user' => $user,
+        ];
     }
 
     public function getAuthenticatedUser(): ?array
