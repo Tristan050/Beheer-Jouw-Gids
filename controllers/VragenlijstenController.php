@@ -8,7 +8,7 @@ class VragenlijstenController extends BaseController
 
     public function index(): void
     {
-        $this->auth();
+        $this->requireSuperAdmin();
 
         $roles = $this->service->getRoleOptions();
         $selectedRoleId = (int) ($_GET['role_id'] ?? 0);
@@ -27,7 +27,7 @@ class VragenlijstenController extends BaseController
 
     public function editVraag(): void
     {
-        $this->auth();
+        $this->requireSuperAdmin();
 
         $id = (int) ($_GET['id'] ?? 0);
         $roleId = (int) ($_GET['role_id'] ?? 0);
@@ -53,7 +53,7 @@ class VragenlijstenController extends BaseController
 
     public function saveVraag(): void
     {
-        $this->auth();
+        $this->requireSuperAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
@@ -69,7 +69,7 @@ class VragenlijstenController extends BaseController
 
     public function deleteVraag(): void
     {
-        $this->auth();
+        $this->requireSuperAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);

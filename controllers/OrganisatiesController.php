@@ -8,7 +8,7 @@ class OrganisatiesController extends BaseController
 
     public function index(): void
     {
-        $this->auth();
+        $this->requireSuperAdmin();
 
         $this->render('admin/organisaties', [
             'items' => $this->service->getIndexItems(),
@@ -19,7 +19,7 @@ class OrganisatiesController extends BaseController
 
     public function edit(): void
     {
-        $this->auth();
+        $this->requireSuperAdmin();
 
         $id = (int) ($_GET['id'] ?? 0);
         $item = $this->service->getById($id);
@@ -40,7 +40,7 @@ class OrganisatiesController extends BaseController
 
     public function save(): void
     {
-        $this->auth();
+        $this->requireSuperAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
@@ -56,7 +56,7 @@ class OrganisatiesController extends BaseController
 
     public function delete(): void
     {
-        $this->auth();
+        $this->requireSuperAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);

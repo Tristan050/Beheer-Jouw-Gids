@@ -12,7 +12,12 @@ class AuthController extends BaseController
     public function index(): void
     {
         if (isLoggedIn()) {
-            redirect(appUrl('admin'));
+            if (!isAdmin()) {
+                $this->authService->logout();
+                setFlash('auth_error', 'Je hebt geen toegang tot dit admin-paneel.');
+            } else {
+                redirect(appUrl('admin'));
+            }
         }
 
         $error = null;
@@ -29,11 +34,17 @@ class AuthController extends BaseController
                 $error = 'Vul een geldig e-mailadres in.';
             } elseif ($password === '') {
                 $error = 'Vul je wachtwoord in.';
-            } elseif ($this->authService->attemptLogin($email, $password)) {
-                clearOldInput();
-                redirect(appUrl('admin'));
             } else {
-                $error = 'Ongeldige inloggegevens.';
+                $loginResult = $this->authService->attemptLogin($email, $password);
+                
+                if ($loginResult === true) {
+                    clearOldInput();
+                    redirect(appUrl('admin'));
+                } elseif (is_array($loginResult)) {
+                    $error = $loginResult['message'] ?? 'Ongeldige inloggegevens.';
+                } else {
+                    $error = 'Ongeldige inloggegevens.';
+                }
             }
         }
 
