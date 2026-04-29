@@ -271,7 +271,7 @@ $dashboardJson = json_encode(
                 return '' +
                     `<tr data-moment="${dataMoment.replace(/"/g, '&quot;')}">` +
                     `<td>${safeMoment.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>` +
-                        '<td><span class="inline-flex items-center rounded-full bg-[#ACBC92]/20 px-2 py-0.5 text-xs font-semibold text-[#55624A]">Bezocht</span></td>' +
+                    '<td><span class="inline-flex items-center rounded-full bg-[#ACBC92]/20 px-2 py-0.5 text-xs font-semibold text-[#55624A]">Bezocht</span></td>' +
                     '</tr>';
             })
             .join('');
