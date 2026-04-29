@@ -14,6 +14,14 @@ return [
             'controller' => 'AuthController',
             'method' => 'logout',
         ],
+        'otp-verify' => [
+            'controller' => 'OTPController',
+            'method' => 'verifyCode',
+        ],
+        'otp-logout' => [
+            'controller' => 'OTPController',
+            'method' => 'logout',
+        ],
         'leefgebieden' => [
             'controller' => 'LeefgebiedenController',
             'method' => 'index',
@@ -54,6 +62,14 @@ return [
             'controller' => 'AandachtspuntenController',
             'method' => 'edit',
         ],
+        'aandachtspunt-save' => [
+            'controller' => 'AandachtspuntenController',
+            'method' => 'save',
+        ],
+        'aandachtspunt-delete' => [
+            'controller' => 'AandachtspuntenController',
+            'method' => 'delete',
+        ],
         'verdiepingsvragen' => [
             'controller' => 'VerdiepingsvragenController',
             'method' => 'index',
@@ -61,6 +77,58 @@ return [
         'verdieping-vraag-edit' => [
             'controller' => 'VerdiepingsvragenController',
             'method' => 'edit',
+        ],
+        'verdieping-vraag-save' => [
+            'controller' => 'VerdiepingsvragenController',
+            'method' => 'save',
+        ],
+        'verdieping-vraag-delete' => [
+            'controller' => 'VerdiepingsvragenController',
+            'method' => 'delete',
+        ],
+        'organisaties' => [
+            'controller' => 'OrganisatiesController',
+            'method' => 'index',
+        ],
+        'organisatie-edit' => [
+            'controller' => 'OrganisatiesController',
+            'method' => 'edit',
+        ],
+        'organisatie-save' => [
+            'controller' => 'OrganisatiesController',
+            'method' => 'save',
+        ],
+        'organisatie-delete' => [
+            'controller' => 'OrganisatiesController',
+            'method' => 'delete',
+        ],
+        'verdieping-koppelingen' => [
+            'controller' => 'VerdiepingKoppelingenController',
+            'method' => 'index',
+        ],
+        'verdieping-koppeling-save' => [
+            'controller' => 'VerdiepingKoppelingenController',
+            'method' => 'save',
+        ],
+        'verdieping-koppeling-delete' => [
+            'controller' => 'VerdiepingKoppelingenController',
+            'method' => 'delete',
+        ],
+        'vragenlijsten' => [
+            'controller' => 'VragenlijstenController',
+            'method' => 'index',
+        ],
+        'vragenlijst-vraag-edit' => [
+            'controller' => 'VragenlijstenController',
+            'method' => 'editVraag',
+        ],
+        'vragenlijst-vraag-save' => [
+            'controller' => 'VragenlijstenController',
+            'method' => 'saveVraag',
+        ],
+        'vragenlijst-vraag-delete' => [
+            'controller' => 'VragenlijstenController',
+            'method' => 'deleteVraag',
         ],
         '404' => [
             'controller' => 'ErrorController',

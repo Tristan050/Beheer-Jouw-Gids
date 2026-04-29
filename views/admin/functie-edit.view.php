@@ -23,7 +23,7 @@ $sidebar = [
 			<section class="panel" style="max-width: 900px; border-color:#d5e8dc;">
 				<div class="panel-header">
 					<h2 class="panel-title">Formulier gids_functie</h2>
-					<span class="badge badge-primary"><?php echo !empty($data['form_values']['FunctieID']) ? 'Bewerken' : 'Nieuw'; ?></span>
+					<span class="badge badge-primary"><?= !empty($data['form_values']['FunctieID']) ? 'Bewerken' : 'Nieuw'; ?></span>
 				</div>
 
 				<form id="functieForm" method="post" action="<?= htmlspecialchars(appUrl('functie-save')) ?>" class="space-y-4" data-table="gids_functie">

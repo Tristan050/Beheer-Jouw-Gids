@@ -11,10 +11,7 @@ class HomeController extends BaseController
 
     public function index(): void
     {
-        if (!isLoggedIn()) {
-            setFlash('auth_error', 'Log eerst in om verder te gaan.');
-            redirect(appUrl('login'));
-        }
+        $this->requireSuperAdmin();
 
         $user = $this->authService->getAuthenticatedUser();
 

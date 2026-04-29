@@ -3,16 +3,23 @@
 class AuthController extends BaseController
 {
     private AuthService $authService;
+    private OTPService $otpService;
 
-    public function __construct(?AuthService $authService = null)
+    public function __construct(?AuthService $authService = null, ?OTPService $otpService = null)
     {
         $this->authService = $authService ?? new AuthService();
+        $this->otpService = $otpService ?? new OTPService();
     }
-
+    
     public function index(): void
     {
         if (isLoggedIn()) {
-            redirect(appUrl('admin'));
+            if (!isAdmin()) {
+                $this->authService->logout();
+                setFlash('auth_error', 'Je hebt geen toegang tot dit admin-paneel.');
+            } else {
+                redirect(appUrl('admin'));
+            }
         }
 
         $error = null;
@@ -29,11 +36,25 @@ class AuthController extends BaseController
                 $error = 'Vul een geldig e-mailadres in.';
             } elseif ($password === '') {
                 $error = 'Vul je wachtwoord in.';
-            } elseif ($this->authService->attemptLogin($email, $password)) {
-                clearOldInput();
-                redirect(appUrl('admin'));
             } else {
-                $error = 'Ongeldige inloggegevens.';
+                $loginResult = $this->authService->attemptLogin($email, $password);
+                
+                if (is_array($loginResult) && !empty($loginResult['success'])) {
+                    session_regenerate_id(true);
+
+                    $_SESSION['otp_email'] = $email;
+
+                    if ($this->otpService->generateAndSendCode($email)) {
+                        clearOldInput();
+                        redirect(appUrl('otp-verify'));
+                    }
+
+                    $error = $this->otpService->getLastError() ?? 'Kon verificatiecode niet versturen. Controleer de logs.';
+                } elseif (is_array($loginResult)) {
+                    $error = $loginResult['message'] ?? 'Ongeldige inloggegevens.';
+                } else {
+                    $error = 'Ongeldige inloggegevens.';
+                }
             }
         }
 
@@ -47,11 +68,7 @@ class AuthController extends BaseController
 
     public function logout(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            throw new HttpException(405, 'Methode niet toegestaan');
-        }
-
+        $this->requirePost();
         CSRF::check();
         $this->authService->logout();
         redirect(appUrl('login'));

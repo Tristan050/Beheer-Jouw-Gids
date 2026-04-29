@@ -21,27 +21,6 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/config.php';
 
-spl_autoload_register(function (string $class): void {
-    $safeClass = basename(str_replace('\\', '/', $class));
-    if ($safeClass === '') {
-        return;
-    }
-
-    $folders = [
-        __DIR__ . '/controllers/',
-        __DIR__ . '/services/',
-        __DIR__ . '/repositories/',
-        __DIR__ . '/libs/',
-    ];
-
-    foreach ($folders as $folder) {
-        $candidate = $folder . $safeClass . '.php';
-        if (is_file($candidate)) {
-            require_once $candidate;
-            return;
-        }
-    }
-});
 
 require_once __DIR__ . '/libs/HttpException.php';
 require_once __DIR__ . '/libs/CSRF.php';

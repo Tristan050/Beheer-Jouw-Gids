@@ -1,6 +1,6 @@
 <?php
 
-class LeefgebiedService
+class LeefgebiedService extends BaseService
 {
     public function __construct(private readonly LeefgebiedRepository $repository = new LeefgebiedRepository())
     {
@@ -8,26 +8,22 @@ class LeefgebiedService
 
     public function getIndexItems(): array
     {
-        $rows = $this->repository->getAll();
+        $items = $this->repository->getAll();
 
-        return array_map(function (array $row): array {
-            $id = (int) ($row['id'] ?? 0);
-            $name = (string) ($row['name'] ?? '');
-            $description = (string) ($row['description'] ?? '');
-            $sortOrder = (int) ($row['sort_order'] ?? 0);
+        return array_map(function (LeefgebiedDTO $dto): array {
 
             return [
-                'id' => $id,
-                'name' => $name,
-                'description' => $description,
-                'sort_order' => $sortOrder,
-                'search' => strtolower(trim($id . ' ' . $name . ' ' . $description . ' ' . $sortOrder)),
-                'edit_url' => appUrl('leefgebied-edit') . '?id=' . $id,
+                'id' => $dto->id,
+                'name' => $dto->name,
+                'description' => $dto->description,
+                'sort_order' => $dto->sortOrder,
+                'search' => strtolower(trim($dto->id . ' ' . $dto->name . ' ' . $dto->description . ' ' . $dto->sortOrder)),
+                'edit_url' => appUrl('leefgebied-edit') . '?id=' . $dto->id,
             ];
-        }, $rows);
+        }, $items);
     }
 
-    public function getById(int $id): ?array
+    public function getById(int $id): ?LeefgebiedDTO
     {
         if ($id <= 0) {
             return null;
@@ -36,13 +32,13 @@ class LeefgebiedService
         return $this->repository->findById($id);
     }
 
-    public function getFormValues(?array $item): array
+    public function getFormValues(?LeefgebiedDTO $item): array
     {
         return [
-            'LeefgebiedID' => old('LeefgebiedID', $item !== null ? (string) $item['id'] : ''),
-            'Naam_leefgebied' => old('Naam_leefgebied', $item !== null ? (string) $item['name'] : ''),
-            'beschrijving_leefgebied' => old('beschrijving_leefgebied', $item !== null ? (string) $item['description'] : ''),
-            'Sort_order' => old('Sort_order', $item !== null ? (string) $item['sort_order'] : '0'),
+            'LeefgebiedID' => old('LeefgebiedID', $item !== null ? (string) $item->id : ''),
+            'Naam_leefgebied' => old('Naam_leefgebied', $item !== null ? $item->name : ''),
+            'beschrijving_leefgebied' => old('beschrijving_leefgebied', $item !== null ? $item->description : ''),
+            'Sort_order' => old('Sort_order', $item !== null ? (string) $item->sortOrder : '0'),
         ];
     }
 
@@ -62,47 +58,27 @@ class LeefgebiedService
         ]);
 
         if ($name === '') {
-            return [
-                'ok' => false,
-                'flash_key' => 'leefgebieden_form_error',
-                'message' => 'Naam leefgebied is verplicht.',
-                'redirect' => appUrl('leefgebied-edit') . ($id > 0 ? '?id=' . $id : ''),
-            ];
+            return $this->error('leefgebieden_form_error', 'Naam leefgebied is verplicht.', appUrl('leefgebied-edit') . ($id > 0 ? '?id=' . $id : ''));
         }
 
         if ($id > 0) {
-            $existing = $this->repository->findById($id);
+            $existing = $this->getById($id);
             if ($existing === null) {
                 clearOldInput();
 
-                return [
-                    'ok' => false,
-                    'flash_key' => 'leefgebieden_error',
-                    'message' => 'Leefgebied niet gevonden.',
-                    'redirect' => appUrl('leefgebieden'),
-                ];
+                return $this->error('leefgebieden_error', 'Leefgebied niet gevonden.', appUrl('leefgebieden'));
             }
 
             $this->repository->update($id, $name, $description, $sortOrder);
             clearOldInput();
 
-            return [
-                'ok' => true,
-                'flash_key' => 'leefgebieden_success',
-                'message' => 'Leefgebied succesvol bijgewerkt.',
-                'redirect' => appUrl('leefgebieden'),
-            ];
+            return $this->success('leefgebieden_success', 'Leefgebied succesvol bijgewerkt.', appUrl('leefgebieden'));
         }
 
         $newId = $this->repository->create($name, $description, $sortOrder);
         clearOldInput();
 
-        return [
-            'ok' => true,
-            'flash_key' => 'leefgebieden_success',
-            'message' => 'Leefgebied succesvol toegevoegd (ID: ' . $newId . ').',
-            'redirect' => appUrl('leefgebieden'),
-        ];
+        return $this->success('leefgebieden_success', 'Leefgebied succesvol toegevoegd (ID: ' . $newId . ').', appUrl('leefgebieden'));
     }
 
     public function delete(array $input): array
@@ -110,40 +86,20 @@ class LeefgebiedService
         $id = (int) ($input['LeefgebiedID'] ?? 0);
 
         if ($id <= 0) {
-            return [
-                'ok' => false,
-                'flash_key' => 'leefgebieden_error',
-                'message' => 'Ongeldig leefgebied geselecteerd.',
-                'redirect' => appUrl('leefgebieden'),
-            ];
+            return $this->error('leefgebieden_error', 'Ongeldig leefgebied geselecteerd.', appUrl('leefgebieden'));
         }
 
         $existing = $this->repository->findById($id);
         if ($existing === null) {
-            return [
-                'ok' => false,
-                'flash_key' => 'leefgebieden_error',
-                'message' => 'Leefgebied niet gevonden.',
-                'redirect' => appUrl('leefgebieden'),
-            ];
+            return $this->error('leefgebieden_error', 'Leefgebied niet gevonden.', appUrl('leefgebieden'));
         }
 
         $affectedRows = $this->repository->delete($id);
 
         if ($affectedRows < 1) {
-            return [
-                'ok' => false,
-                'flash_key' => 'leefgebieden_error',
-                'message' => 'Leefgebied kon niet worden verwijderd.',
-                'redirect' => appUrl('leefgebieden'),
-            ];
+            return $this->error('leefgebieden_error', 'Leefgebied kon niet worden verwijderd.', appUrl('leefgebieden'));
         }
 
-        return [
-            'ok' => true,
-            'flash_key' => 'leefgebieden_success',
-            'message' => 'Leefgebied succesvol verwijderd.',
-            'redirect' => appUrl('leefgebieden'),
-        ];
+        return $this->success('leefgebieden_success', 'Leefgebied succesvol verwijderd.', appUrl('leefgebieden'));
     }
 }

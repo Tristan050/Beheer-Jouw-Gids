@@ -15,6 +15,14 @@ $sidebar = [
 		</header>
 
 		<main class="page-wrap">
+			<?php if (!empty($data['error'])): ?>
+				<div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><?= htmlspecialchars((string) $data['error']) ?></div>
+			<?php endif; ?>
+
+			<?php if (!empty($data['success'])): ?>
+				<div class="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"><?= htmlspecialchars((string) $data['success']) ?></div>
+			<?php endif; ?>
+
 			<nav class="breadcrumbs" aria-label="Breadcrumb">
 				<a href="/admin">Dashboard</a>
 				<span>/</span>
@@ -27,7 +35,7 @@ $sidebar = [
 						<h2 class="panel-title">Overzicht gids_aandachtspunt</h2>
 						<p class="text-sm text-slate-600 mt-1">Veldkoppeling: <strong>AandachtspuntID</strong>, <strong>FunctieID</strong>, <strong>Sort_order</strong>, <strong>Aandachtspunt</strong>, <strong>Toelichting</strong>, <strong>Scan_tekst</strong>, <strong>Advies_tekst</strong>.</p>
 					</div>
-					<a href="/aandachtspunten/edit" class="btn" style="background:#5c3b87;color:#fff;">Nieuw aandachtspunt</a>
+					<a href="<?= htmlspecialchars(appUrl('aandachtspunt-edit')) ?>" class="btn" style="background:#5c3b87;color:#fff;">Nieuw aandachtspunt</a>
 				</div>
 
 				<div class="toolbar">
@@ -45,7 +53,7 @@ $sidebar = [
 						<thead>
 							<tr>
 								<th>AandachtspuntID</th>
-								<th>FunctieID</th>
+								<th>Functie</th>
 								<th>Aandachtspunt</th>
 								<th>Sort_order</th>
 								<th>Scan_tekst</th>
@@ -54,30 +62,30 @@ $sidebar = [
 							</tr>
 						</thead>
 						<tbody id="aandachtspuntTableBody">
-							<tr data-search="1 1 inkomen onvoldoende zicht op budget maak inkomsten en uitgaven inzichtelijk 10">
-								<td>1</td>
-								<td>1</td>
-								<td>Onvoldoende zicht op budget</td>
-								<td>10</td>
-								<td>Maak inkomsten en uitgaven inzichtelijk.</td>
-								<td>Plan een budgetgesprek.</td>
-								<td class="flex gap-2 py-2">
-									<a href="/aandachtspunten/edit?id=1" class="btn btn-secondary">Bewerken</a>
-									<button type="button" class="btn btn-secondary">Verwijderen</button>
-								</td>
-							</tr>
-							<tr data-search="2 2 gezondheid weinig sociale contacten bespreek netwerk en daginvulling stimuleer lokale activiteiten 20">
-								<td>2</td>
-								<td>2</td>
-								<td>Weinig sociale contacten</td>
-								<td>20</td>
-								<td>Bespreek netwerk en daginvulling.</td>
-								<td>Stimuleer lokale activiteiten.</td>
-								<td class="flex gap-2 py-2">
-									<a href="/aandachtspunten/edit?id=2" class="btn btn-secondary">Bewerken</a>
-									<button type="button" class="btn btn-secondary">Verwijderen</button>
-								</td>
-							</tr>
+							<?php if (!empty($data['items'])): ?>
+								<?php foreach ($data['items'] as $row): ?>
+									<tr data-search="<?= htmlspecialchars((string) ($row['search'] ?? '')) ?>">
+										<td><?= (int) ($row['id'] ?? 0) ?></td>
+										<td><?= htmlspecialchars((string) ($row['functie_name'] ?? '')) ?></td>
+										<td><?= htmlspecialchars((string) ($row['aandachtspunt'] ?? '')) ?></td>
+										<td><?= (int) ($row['sort_order'] ?? 0) ?></td>
+										<td><?= htmlspecialchars((string) ($row['scan_tekst'] ?? '')) ?></td>
+										<td><?= htmlspecialchars((string) ($row['advies_tekst'] ?? '')) ?></td>
+										<td class="flex gap-2 py-2">
+											<a href="<?= htmlspecialchars((string) ($row['edit_url'] ?? appUrl('aandachtspunt-edit'))) ?>" class="btn btn-secondary">Bewerken</a>
+											<form method="post" action="<?= htmlspecialchars(appUrl('aandachtspunt-delete')) ?>" onsubmit="return confirm('Weet je zeker dat je dit aandachtspunt wilt verwijderen?');" style="display:inline;">
+												<?= CSRF::token() ?>
+												<input type="hidden" name="AandachtspuntID" value="<?= (int) ($row['id'] ?? 0) ?>">
+												<button type="submit" class="btn btn-secondary">Verwijderen</button>
+											</form>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							<?php else: ?>
+								<tr>
+									<td colspan="7" class="text-center py-4">Nog geen aandachtspunten gevonden.</td>
+								</tr>
+							<?php endif; ?>
 						</tbody>
 					</table>
 				</div>
