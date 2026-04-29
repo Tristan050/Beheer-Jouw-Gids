@@ -1,162 +1,205 @@
-<div id="adminPanel" class="admin-shell">
-    <aside class="admin-sidebar" aria-label="Hoofdmenu">
-        <div class="sidebar-brand">Jouw-Gids Beheer</div>
-        <div class="sidebar-user">
-            Ingelogd als <strong id="usernameSidebar">Administrator</strong>
+<?php
+$user = is_array($data['user'] ?? null) ? $data['user'] : [];
+$fullName = trim((string) ($user['first_name'] ?? '') . ' ' . (string) ($user['last_name'] ?? ''));
+$username = $fullName !== '' ? $fullName : 'Administrator';
+
+$dashboardUrl = appUrl('admin');
+$leefgebiedenUrl = appUrl('leefgebieden');
+$functiesUrl = appUrl('functies');
+$aandachtspuntenUrl = appUrl('aandachtspunten');
+$verdiepingsvragenUrl = appUrl('verdiepingsvragen');
+$vragenlijstenUrl = appUrl('vragenlijsten');
+$organisatiesUrl = appUrl('organisaties');
+$verdiepingKoppelingenUrl = appUrl('verdieping-koppelingen');
+$logoutUrl = appUrl('logout');
+
+$sidebar = [
+    'variant' => 'dashboard',
+    'username' => $username,
+    'logout_url' => $logoutUrl,
+];
+?>
+
+<div id="adminPanel" class="min-h-screen bg-slate-50 text-slate-900">
+    <div class="flex min-h-screen">
+        <?php require __DIR__ . '/components/sidebar.view.php'; ?>
+
+        <div class="flex min-h-screen flex-1 flex-col">
+            <header class="border-b border-slate-200 bg-white/80 px-6 py-5 backdrop-blur" aria-label="Bovenbalk">
+                <div class="flex items-center justify-between gap-4">
+                    <h1 class="text-2xl font-semibold tracking-tight">Beheerpagina</h1>
+                    <div class="hidden items-center gap-2 text-xs font-semibold text-slate-500 md:flex">
+                        <span class="h-2 w-2 rounded-full bg-[#ACBC92]"></span>
+                        <span>Live overzicht</span>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 space-y-6 px-6 py-6">
+                <nav class="flex items-center gap-2 text-sm text-slate-500" aria-label="Breadcrumb">
+                    <a href="<?= htmlspecialchars($dashboardUrl) ?>" class="font-medium text-slate-600 hover:text-slate-900">Dashboard</a>
+                    <span class="text-slate-400">/</span>
+                    <span class="font-medium text-slate-700">Overzicht</span>
+                </nav>
+
+                <div class="rounded-2xl border border-slate-200 bg-white px-6 py-5 shadow-sm">
+                    <h2 class="text-xl font-semibold">Welkom, <span id="usernameDisplay" class="text-[#A53714]">Administrator</span></h2>
+                    <p class="mt-2 text-sm text-slate-600">Hier zie je direct de belangrijkste trends, bezoeken en scanactiviteit.</p>
+                </div>
+
+                <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm" aria-label="Snelnavigatie beheer">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <h3 class="text-lg font-semibold">Snel naar beheeronderdelen</h3>
+                        <span class="inline-flex items-center rounded-full bg-[#ACBC92]/20 px-3 py-1 text-xs font-semibold text-[#55624A]">Alle modules</span>
+                    </div>
+                    <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                        <a href="<?= htmlspecialchars($leefgebiedenUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
+                            <i class="fas fa-folder-open" aria-hidden="true"></i>
+                            <span>Leefgebieden</span>
+                        </a>
+                        <a href="<?= htmlspecialchars($functiesUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
+                            <i class="fas fa-database" aria-hidden="true"></i>
+                            <span>Functies</span>
+                        </a>
+                        <a href="<?= htmlspecialchars($aandachtspuntenUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
+                            <i class="fas fa-list-alt" aria-hidden="true"></i>
+                            <span>Aandachtspunten</span>
+                        </a>
+                        <a href="<?= htmlspecialchars($verdiepingsvragenUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
+                            <i class="fas fa-chart-line" aria-hidden="true"></i>
+                            <span>Verdiepingsvragen</span>
+                        </a>
+                        <a href="<?= htmlspecialchars($vragenlijstenUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
+                            <i class="fas fa-list" aria-hidden="true"></i>
+                            <span>Vragenlijsten</span>
+                        </a>
+                        <a href="<?= htmlspecialchars($organisatiesUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
+                            <i class="fas fa-building" aria-hidden="true"></i>
+                            <span>Organisaties</span>
+                        </a>
+                        <a href="<?= htmlspecialchars($verdiepingKoppelingenUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
+                            <i class="fas fa-link" aria-hidden="true"></i>
+                            <span>Verdieping koppelingen</span>
+                        </a>
+                    </div>
+                </section>
+
+                <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Kernstatistieken">
+                    <article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" aria-label="Unieke bezoekers">
+                        <div class="flex items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-sm font-semibold text-slate-500">Unieke bezoekers</h3>
+                                <p class="mt-2 text-2xl font-semibold text-slate-900" id="metricUniekeBezoekers">0</p>
+                            </div>
+                            <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#A53714]/10 text-[#A53714]" aria-hidden="true">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="rounded-2xl border border-[#DDE6CF] bg-[#F8FAF6] p-4 shadow-sm" aria-label="Nieuwe scans vandaag">
+                        <div class="flex items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-sm font-semibold text-slate-500">Nieuwe scans</h3>
+                                <p class="mt-2 text-2xl font-semibold text-slate-900" id="metricNieuweScans">0</p>
+                                <p class="text-xs font-semibold text-[#6B7A55]">Vandaag</p>
+                            </div>
+                            <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ACBC92]/30 text-[#6B7A55]" aria-hidden="true">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" aria-label="Totaal scans">
+                        <div class="flex items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-sm font-semibold text-slate-500">Totaal scans</h3>
+                                <p class="mt-2 text-2xl font-semibold text-slate-900" id="metricTotaalScans">0</p>
+                            </div>
+                            <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#A53714]/10 text-[#A53714]" aria-hidden="true">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="rounded-2xl border border-[#DDE6CF] bg-[#F8FAF6] p-4 shadow-sm" aria-label="Bezoekers Jouw-Gids">
+                        <div class="flex items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-sm font-semibold text-slate-500">Bezoekers Jouw-Gids</h3>
+                                <p class="mt-2 text-2xl font-semibold text-slate-900" id="metricTotaalBezoekers">0</p>
+                            </div>
+                            <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ACBC92]/30 text-[#6B7A55]" aria-hidden="true">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="grid gap-4 xl:grid-cols-2" aria-label="Dashboard grafieken">
+                    <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h3 class="text-lg font-semibold">Bezoekers per dag (laatste 7 dagen)</h3>
+                        </div>
+                        <div class="h-64" role="img" aria-label="Staafdiagram bezoekers per dag">
+                            <canvas id="usersChart" class="h-full w-full"></canvas>
+                        </div>
+                    </article>
+
+                    <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h3 class="text-lg font-semibold">Scans per dag (laatste 7 dagen)</h3>
+                        </div>
+                        <div class="h-64" role="img" aria-label="Lijndiagram scans per dag">
+                            <canvas id="scansChart" class="h-full w-full"></canvas>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm" aria-label="Recente bezoeken" id="recente-bezoeken">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <h3 class="text-lg font-semibold">Recente bezoeken</h3>
+                        <span class="inline-flex items-center rounded-full bg-[#A53714]/10 px-3 py-1 text-xs font-semibold text-[#A53714]" id="visitCountBadge">0 momenten</span>
+                    </div>
+
+                    <div class="mt-4 flex flex-wrap items-center gap-3">
+                        <div class="relative min-w-[220px] flex-1">
+                            <input id="visitSearchInput" type="text" placeholder="Zoek bezoekmoment..." class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 pr-9 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" autocomplete="off" />
+                            <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true"></i>
+                        </div>
+                        <button class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50" type="button" onclick="resetVisitFilters()">Filters wissen</button>
+                    </div>
+
+                    <p id="visitFilterStatus" class="mt-3 text-sm text-slate-600" aria-live="polite"></p>
+
+                    <div class="mt-4 overflow-x-auto rounded-xl border border-slate-200">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead class="bg-slate-100 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                <tr>
+                                    <th class="px-4 py-3">Datum</th>
+                                    <th class="px-4 py-3">Actie</th>
+                                </tr>
+                            </thead>
+                            <tbody id="visitsTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
         </div>
-    </aside>
-
-    <div class="admin-content transition-all duration-300">
-        <header class="admin-topbar" aria-label="Bovenbalk">
-            <h1 class="topbar-title">Beheerpagina</h1>
-        </header>
-
-        <main class="page-wrap">
-            <nav class="breadcrumbs" aria-label="Breadcrumb">
-                <a href="/admin">Dashboard</a>
-                <span>/</span>
-                <span class="current">Overzicht</span>
-            </nav>
-
-            <div class="page-header">
-                <div>
-                    <h2 class="page-title">Welkom, <span id="usernameDisplay">Administrator</span></h2>
-                    <p class="page-subtitle">Hier zie je direct de belangrijkste trends, bezoeken en scanactiviteit.</p>
-                </div>
-            </div>
-
-            <section class="stats-grid" aria-label="Kernstatistieken">
-                <article class="metric-card" aria-label="Unieke bezoekers">
-                    <div class="metric-row">
-                        <div>
-                            <h3 class="metric-label">Unieke bezoekers</h3>
-                            <p class="metric-value" id="metricUniekeBezoekers">0</p>
-                        </div>
-                        <div class="metric-icon" aria-hidden="true">
-                            <i class="fas fa-users text-primary"></i>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="metric-card metric-card--secondary" aria-label="Nieuwe scans vandaag">
-                    <div class="metric-row">
-                        <div>
-                            <h3 class="metric-label">Nieuwe scans</h3>
-                            <p class="metric-value" id="metricNieuweScans">0</p>
-                            <p class="metric-note">Vandaag</p>
-                        </div>
-                        <div class="metric-icon" aria-hidden="true">
-                            <i class="fas fa-chart-bar text-secondary"></i>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="metric-card" aria-label="Totaal scans">
-                    <div class="metric-row">
-                        <div>
-                            <h3 class="metric-label">Totaal scans</h3>
-                            <p class="metric-value" id="metricTotaalScans">0</p>
-                        </div>
-                        <div class="metric-icon" aria-hidden="true">
-                            <i class="fas fa-check-circle text-primary"></i>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="metric-card metric-card--secondary" aria-label="Bezoekers Jouw-Gids">
-                    <div class="metric-row">
-                        <div>
-                            <h3 class="metric-label">Bezoekers Jouw-Gids</h3>
-                            <p class="metric-value" id="metricTotaalBezoekers">0</p>
-                        </div>
-                        <div class="metric-icon" aria-hidden="true">
-                            <i class="fas fa-globe text-secondary"></i>
-                        </div>
-                    </div>
-                </article>
-            </section>
-
-            <section class="panel-grid" aria-label="Dashboard grafieken">
-                <article class="panel">
-                    <div class="panel-header">
-                        <h3 class="panel-title">Bezoekers per dag (laatste 7 dagen)</h3>
-                    </div>
-                    <div class="h-64" role="img" aria-label="Staafdiagram bezoekers per dag">
-                        <canvas id="usersChart" class="w-full"></canvas>
-                    </div>
-                </article>
-
-                <article class="panel">
-                    <div class="panel-header">
-                        <h3 class="panel-title">Scans per dag (laatste 7 dagen)</h3>
-                    </div>
-                    <div class="h-64" role="img" aria-label="Lijndiagram scans per dag">
-                        <canvas id="scansChart" class="w-full"></canvas>
-                    </div>
-                </article>
-            </section>
-
-            <section class="panel" aria-label="Recente bezoeken">
-                <div class="panel-header">
-                    <h3 class="panel-title">Recente bezoeken</h3>
-                    <span class="badge badge-primary" id="visitCountBadge">0 momenten</span>
-                </div>
-
-                <div class="toolbar">
-                    <div class="toolbar-actions" style="width: 100%;">
-                        <div class="search-wrap" style="flex: 1; min-width: 220px;">
-                            <input id="visitSearchInput" type="text" placeholder="Zoek bezoekmoment..." class="search-input" autocomplete="off" />
-                            <i class="fas fa-search search-icon" aria-hidden="true"></i>
-                        </div>
-                        <button class="btn btn-secondary" type="button" onclick="resetVisitFilters()">Filters wissen</button>
-                    </div>
-                </div>
-
-                <p id="visitFilterStatus" class="text-sm text-gray-600 mb-3" aria-live="polite"></p>
-
-                <div class="table-wrap">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Datum</th>
-                                <th>Actie</th>
-                            </tr>
-                        </thead>
-                        <tbody id="visitsTableBody"></tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
     </div>
 </div>
 
+<?php
+$dashboard = is_array($data['dashboard'] ?? null) ? $data['dashboard'] : [];
+$dashboard['username'] = $username;
+$dashboardJson = json_encode(
+    $dashboard,
+    JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+);
+?>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" crossorigin="anonymous"></script>
 <script>
-    const adminData = {
-        username: 'Administrator',
-        stats: {
-            uniekeBezoekers: 1284,
-            nieuweScansVandaag: 37,
-            totaalScans: 9280,
-            totaalBezoekers: 19432,
-        },
-        bezoekersChartData: {
-            labels: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'],
-            values: [143, 188, 176, 220, 205, 169, 183],
-        },
-        scansChartData: {
-            labels: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'],
-            values: [42, 57, 49, 63, 72, 39, 51],
-        },
-        bezoekersMomenten: [
-            '20-04-2026 09:14',
-            '20-04-2026 08:37',
-            '19-04-2026 22:05',
-            '19-04-2026 19:48',
-            '19-04-2026 16:11',
-            '19-04-2026 13:03',
-            '19-04-2026 10:27',
-        ],
-    };
+    const adminData = <?= $dashboardJson ?: '{}' ?>;
 
     let usersChartInstance = null;
     let scansChartInstance = null;
@@ -198,6 +241,7 @@
         const username = String(adminData.username || 'Administrator');
         setText('usernameDisplay', username);
         setText('usernameSidebar', username);
+        setText('usernameSidebarBottom', username);
     }
 
     function renderVisits() {
@@ -210,8 +254,8 @@
         if (visits.length === 0) {
             visitsTableBody.innerHTML = '' +
                 '<tr>' +
-                '<td colspan="2">' +
-                '<div class="empty-state">' +
+                '<td colspan="2" class="px-4 py-6">' +
+                '<div class="flex items-center justify-center gap-2 text-sm text-slate-500">' +
                 '<i class="fas fa-calendar-times" aria-hidden="true"></i>' +
                 'Nog geen recente bezoeken beschikbaar' +
                 '</div>' +
@@ -227,7 +271,7 @@
                 return '' +
                     `<tr data-moment="${dataMoment.replace(/"/g, '&quot;')}">` +
                     `<td>${safeMoment.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>` +
-                    '<td><span class="badge badge-secondary">Bezocht</span></td>' +
+                    '<td><span class="inline-flex items-center rounded-full bg-[#ACBC92]/20 px-2 py-0.5 text-xs font-semibold text-[#55624A]">Bezocht</span></td>' +
                     '</tr>';
             })
             .join('');
