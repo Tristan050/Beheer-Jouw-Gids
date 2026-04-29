@@ -1,6 +1,6 @@
 <?php
 
-class OrganisatieService
+class OrganisatieService extends BaseService
 {
     public function __construct(private readonly OrganisatieRepository $repository = new OrganisatieRepository())
     {
@@ -64,12 +64,7 @@ class OrganisatieService
         ]);
 
         if ($name === '') {
-            return [
-                'ok' => false,
-                'flash_key' => 'organisaties_form_error',
-                'message' => 'Naam organisatie is verplicht.',
-                'redirect' => appUrl('organisatie-edit') . ($id > 0 ? '?id=' . $id : ''),
-            ];
+            return $this->error('organisaties_form_error', 'Naam organisatie is verplicht.', appUrl('organisatie-edit') . ($id > 0 ? '?id=' . $id : ''));
         }
 
         if ($id > 0) {
@@ -77,34 +72,19 @@ class OrganisatieService
             if ($existing === null) {
                 clearOldInput();
 
-                return [
-                    'ok' => false,
-                    'flash_key' => 'organisaties_error',
-                    'message' => 'Organisatie niet gevonden.',
-                    'redirect' => appUrl('organisaties'),
-                ];
+                return $this->error('organisaties_error', 'Organisatie niet gevonden.', appUrl('organisaties'));
             }
 
             $this->repository->update($id, $name, $address, $phone, $email, $website);
             clearOldInput();
 
-            return [
-                'ok' => true,
-                'flash_key' => 'organisaties_success',
-                'message' => 'Organisatie succesvol bijgewerkt.',
-                'redirect' => appUrl('organisaties'),
-            ];
+            return $this->success('organisaties_success', 'Organisatie succesvol bijgewerkt.', appUrl('organisaties'));
         }
 
         $newId = $this->repository->create($name, $address, $phone, $email, $website);
         clearOldInput();
 
-        return [
-            'ok' => true,
-            'flash_key' => 'organisaties_success',
-            'message' => 'Organisatie succesvol toegevoegd (ID: ' . $newId . ').',
-            'redirect' => appUrl('organisaties'),
-        ];
+        return $this->success('organisaties_success', 'Organisatie succesvol toegevoegd (ID: ' . $newId . ').', appUrl('organisaties'));
     }
 
     public function delete(array $input): array
@@ -112,40 +92,20 @@ class OrganisatieService
         $id = (int) ($input['OrganisatieID'] ?? 0);
 
         if ($id <= 0) {
-            return [
-                'ok' => false,
-                'flash_key' => 'organisaties_error',
-                'message' => 'Ongeldige organisatie geselecteerd.',
-                'redirect' => appUrl('organisaties'),
-            ];
+            return $this->error('organisaties_error', 'Ongeldige organisatie geselecteerd.', appUrl('organisaties'));
         }
 
         $existing = $this->repository->findById($id);
         if ($existing === null) {
-            return [
-                'ok' => false,
-                'flash_key' => 'organisaties_error',
-                'message' => 'Organisatie niet gevonden.',
-                'redirect' => appUrl('organisaties'),
-            ];
+            return $this->error('organisaties_error', 'Organisatie niet gevonden.', appUrl('organisaties'));
         }
 
         $affectedRows = $this->repository->delete($id);
 
         if ($affectedRows < 1) {
-            return [
-                'ok' => false,
-                'flash_key' => 'organisaties_error',
-                'message' => 'Organisatie kon niet worden verwijderd.',
-                'redirect' => appUrl('organisaties'),
-            ];
+            return $this->error('organisaties_error', 'Organisatie kon niet worden verwijderd.', appUrl('organisaties'));
         }
 
-        return [
-            'ok' => true,
-            'flash_key' => 'organisaties_success',
-            'message' => 'Organisatie succesvol verwijderd.',
-            'redirect' => appUrl('organisaties'),
-        ];
+        return $this->success('organisaties_success', 'Organisatie succesvol verwijderd.', appUrl('organisaties'));
     }
 }

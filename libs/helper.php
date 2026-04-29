@@ -13,13 +13,7 @@ function hasRole(string $role): bool
 
 function hasAnyRole(array $roles): bool
 {
-    $userRoles = $_SESSION['user_roles'] ?? [];
-    foreach ($roles as $role) {
-        if (in_array($role, $userRoles, true)) {
-            return true;
-        }
-    }
-    return false;
+    return AuthService::hasAnyRole($roles);
 }
 
 function isSuperAdmin(): bool

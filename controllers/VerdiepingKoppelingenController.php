@@ -28,12 +28,7 @@ class VerdiepingKoppelingenController extends BaseController
     public function save(): void
     {
         $this->requireSuperAdmin();
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            throw new HttpException(405, 'Methode niet toegestaan');
-        }
-
+        $this->requirePost();
         CSRF::check();
 
         $result = $this->service->save($_POST);
@@ -44,12 +39,7 @@ class VerdiepingKoppelingenController extends BaseController
     public function delete(): void
     {
         $this->requireSuperAdmin();
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            throw new HttpException(405, 'Methode niet toegestaan');
-        }
-
+        $this->requirePost();
         CSRF::check();
 
         $result = $this->service->delete($_POST);

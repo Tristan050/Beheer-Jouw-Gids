@@ -74,11 +74,7 @@ class OTPController extends BaseController
 
     public function logout(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            throw new HttpException(405, 'Methode niet toegestaan');
-        }
-
+        $this->requirePost();
         CSRF::check();
         unset($_SESSION['otp_email']);
         session_destroy();

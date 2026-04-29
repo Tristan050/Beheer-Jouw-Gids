@@ -95,9 +95,9 @@ class AuthService
         return in_array($role, $userRoles, true);
     }
 
-    public function hasAnyRole(array $roles): bool
+    public static function hasAnyRole(array $roles): bool
     {
-        if (empty($_SESSION['user_id'])) {
+        if (!isLoggedIn()) {
             return false;
         }
 

@@ -10,7 +10,7 @@ class AuthController extends BaseController
         $this->authService = $authService ?? new AuthService();
         $this->otpService = $otpService ?? new OTPService();
     }
-
+    
     public function index(): void
     {
         if (isLoggedIn()) {
@@ -68,11 +68,7 @@ class AuthController extends BaseController
 
     public function logout(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            throw new HttpException(405, 'Methode niet toegestaan');
-        }
-
+        $this->requirePost();
         CSRF::check();
         $this->authService->logout();
         redirect(appUrl('login'));

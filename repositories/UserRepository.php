@@ -56,7 +56,6 @@ class UserRepository
             'roles' => $roles,
         ];
     }
-
     public function getUserRoles(int $userId): array
     {
         $result = execSQL(

@@ -15,7 +15,7 @@ abstract class BaseRepository
 
     protected function getAllRows(): array
     {
-        $sql = sprintf('SELECT * FROM %s ORDER BY %s', $this->tableName(), $this->orderBy());
+        $sql = 'SELECT * FROM ' . $this->tableName() . ' ORDER BY ' . $this->orderBy();
         $result = execSQL($sql, [], false);
 
         if (!$result) {
@@ -32,7 +32,7 @@ abstract class BaseRepository
 
     protected function getRowById(int $id): mixed
     {
-        $sql = sprintf('SELECT * FROM %s WHERE %s = ? LIMIT 1', $this->tableName(), $this->idColumn());
+        $sql = 'SELECT * FROM ' . $this->tableName() . ' WHERE ' . $this->idColumn() . ' = ? LIMIT 1';
         $result = execSQL($sql, ['i', $id], false);
 
         if (!$result || $result->num_rows === 0) {
@@ -44,7 +44,7 @@ abstract class BaseRepository
 
     protected function deleteRowById(int $id): int
     {
-        $sql = sprintf('DELETE FROM %s WHERE %s = ?', $this->tableName(), $this->idColumn());
+        $sql = 'DELETE FROM ' . $this->tableName() . ' WHERE ' . $this->idColumn() . ' = ?';
         return (int) execSQL($sql, ['i', $id], true);
     }
 }

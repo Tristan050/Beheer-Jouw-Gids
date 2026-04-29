@@ -1,6 +1,6 @@
 <?php
 
-class VerdiepingKoppelingService
+class VerdiepingKoppelingService extends BaseService
 {
     public function __construct(
         private readonly VerdiepingKoppelingRepository $repository = new VerdiepingKoppelingRepository(),
@@ -96,21 +96,11 @@ class VerdiepingKoppelingService
         ]);
 
         if ($verdiepingsvraagId <= 0) {
-            return [
-                'ok' => false,
-                'flash_key' => 'verdieping_koppelingen_form_error',
-                'message' => 'Selecteer een verdiepingsvraag.',
-                'redirect' => appUrl('verdieping-koppelingen'),
-            ];
+            return $this->error('verdieping_koppelingen_form_error', 'Selecteer een verdiepingsvraag.', appUrl('verdieping-koppelingen'));
         }
 
         if ($this->verdiepingsvraagRepository->findById($verdiepingsvraagId) === null) {
-            return [
-                'ok' => false,
-                'flash_key' => 'verdieping_koppelingen_form_error',
-                'message' => 'Geselecteerde verdiepingsvraag bestaat niet.',
-                'redirect' => appUrl('verdieping-koppelingen'),
-            ];
+            return $this->error('verdieping_koppelingen_form_error', 'Geselecteerde verdiepingsvraag bestaat niet.', appUrl('verdieping-koppelingen'));
         }
 
         $validOrganisatieIds = [];
@@ -123,12 +113,7 @@ class VerdiepingKoppelingService
         $this->repository->replaceOrganisatiesForVraag($verdiepingsvraagId, $validOrganisatieIds);
         clearOldInput();
 
-        return [
-            'ok' => true,
-            'flash_key' => 'verdieping_koppelingen_success',
-            'message' => 'Koppelingen succesvol opgeslagen.',
-            'redirect' => appUrl('verdieping-koppelingen') . '?verdiepingsvraag_id=' . $verdiepingsvraagId,
-        ];
+        return $this->success('verdieping_koppelingen_success', 'Koppelingen succesvol opgeslagen.', appUrl('verdieping-koppelingen') . '?verdiepingsvraag_id=' . $verdiepingsvraagId);
     }
 
     public function delete(array $input): array
@@ -137,29 +122,14 @@ class VerdiepingKoppelingService
         $organisatieId = (int) ($input['OrganisatieID'] ?? 0);
 
         if ($verdiepingsvraagId <= 0 || $organisatieId <= 0) {
-            return [
-                'ok' => false,
-                'flash_key' => 'verdieping_koppelingen_error',
-                'message' => 'Ongeldige koppeling geselecteerd.',
-                'redirect' => appUrl('verdieping-koppelingen'),
-            ];
+            return $this->error('verdieping_koppelingen_error', 'Ongeldige koppeling geselecteerd.', appUrl('verdieping-koppelingen'));
         }
 
         $affectedRows = $this->repository->deleteLink($verdiepingsvraagId, $organisatieId);
         if ($affectedRows < 1) {
-            return [
-                'ok' => false,
-                'flash_key' => 'verdieping_koppelingen_error',
-                'message' => 'Koppeling niet gevonden of al verwijderd.',
-                'redirect' => appUrl('verdieping-koppelingen'),
-            ];
+            return $this->error('verdieping_koppelingen_error', 'Koppeling niet gevonden of al verwijderd.', appUrl('verdieping-koppelingen'));
         }
 
-        return [
-            'ok' => true,
-            'flash_key' => 'verdieping_koppelingen_success',
-            'message' => 'Koppeling succesvol verwijderd.',
-            'redirect' => appUrl('verdieping-koppelingen') . '?verdiepingsvraag_id=' . $verdiepingsvraagId,
-        ];
+        return $this->success('verdieping_koppelingen_success', 'Koppeling succesvol verwijderd.', appUrl('verdieping-koppelingen') . '?verdiepingsvraag_id=' . $verdiepingsvraagId);
     }
 }

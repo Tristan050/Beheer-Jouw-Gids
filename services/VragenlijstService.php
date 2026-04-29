@@ -1,6 +1,6 @@
 <?php
 
-class VragenlijstService
+class VragenlijstService extends BaseService
 {
     public function __construct(
         private readonly VragenlijstRoleRepository $roleRepository = new VragenlijstRoleRepository(),
@@ -135,63 +135,33 @@ class VragenlijstService
         ]);
 
         if ($roleId <= 0 || $this->roleRepository->findById($roleId) === null) {
-            return [
-                'ok' => false,
-                'flash_key' => 'vragenlijst_form_error',
-                'message' => 'Selecteer een geldige rol.',
-                'redirect' => appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId),
-            ];
+            return $this->error('vragenlijst_form_error', 'Selecteer een geldige rol.', appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId));
         }
 
         if ($questionKey === '') {
-            return [
-                'ok' => false,
-                'flash_key' => 'vragenlijst_form_error',
-                'message' => 'Question_key is verplicht.',
-                'redirect' => appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId),
-            ];
+            return $this->error('vragenlijst_form_error', 'Question_key is verplicht.', appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId));
         }
 
         if ($label === '') {
-            return [
-                'ok' => false,
-                'flash_key' => 'vragenlijst_form_error',
-                'message' => 'Label is verplicht.',
-                'redirect' => appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId),
-            ];
+            return $this->error('vragenlijst_form_error', 'Label is verplicht.', appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId));
         }
 
         $questionType = $this->questionTypeRepository->findById($questionTypeId);
         if ($questionType === null) {
-            return [
-                'ok' => false,
-                'flash_key' => 'vragenlijst_form_error',
-                'message' => 'Selecteer een geldig vraagtype.',
-                'redirect' => appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId),
-            ];
+            return $this->error('vragenlijst_form_error', 'Selecteer een geldig vraagtype.', appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId));
         }
 
         $defaultValue = null;
         if ($defaultValueRaw !== '') {
             json_decode($defaultValueRaw, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
-                return [
-                    'ok' => false,
-                    'flash_key' => 'vragenlijst_form_error',
-                    'message' => 'Default_value moet geldige JSON zijn (of leeg blijven).',
-                    'redirect' => appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId),
-                ];
+                return $this->error('vragenlijst_form_error', 'Default_value moet geldige JSON zijn (of leeg blijven).', appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId));
             }
             $defaultValue = $defaultValueRaw;
         }
 
         if ($this->questionRepository->existsRoleAndKey($roleId, $questionKey, $id)) {
-            return [
-                'ok' => false,
-                'flash_key' => 'vragenlijst_form_error',
-                'message' => 'Question_key bestaat al voor deze rol.',
-                'redirect' => appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId),
-            ];
+            return $this->error('vragenlijst_form_error', 'Question_key bestaat al voor deze rol.', appUrl('vragenlijst-vraag-edit') . ($id > 0 ? '?id=' . $id . '&role_id=' . $roleId : '?role_id=' . $roleId));
         }
 
         if ($id > 0) {
@@ -199,12 +169,7 @@ class VragenlijstService
             if ($existing === null) {
                 clearOldInput();
 
-                return [
-                    'ok' => false,
-                    'flash_key' => 'vragenlijst_error',
-                    'message' => 'Vraag niet gevonden.',
-                    'redirect' => appUrl('vragenlijsten') . '?role_id=' . $roleId,
-                ];
+                return $this->error('vragenlijst_error', 'Vraag niet gevonden.', appUrl('vragenlijsten') . '?role_id=' . $roleId);
             }
 
             $this->questionRepository->update($id, $roleId, $questionKey, $label, $questionTypeId, $defaultValue, $sortOrder);
@@ -217,12 +182,7 @@ class VragenlijstService
             $options = $this->parseOptionLines($optionLinesRaw);
 
             if (empty($options)) {
-                return [
-                    'ok' => false,
-                    'flash_key' => 'vragenlijst_form_error',
-                    'message' => 'Dit vraagtype vereist minimaal 1 optie.',
-                    'redirect' => appUrl('vragenlijst-vraag-edit') . '?id=' . $questionId . '&role_id=' . $roleId,
-                ];
+                return $this->error('vragenlijst_form_error', 'Dit vraagtype vereist minimaal 1 optie.', appUrl('vragenlijst-vraag-edit') . '?id=' . $questionId . '&role_id=' . $roleId);
             }
 
             $this->optionRepository->replaceForQuestion($questionId, $options);
@@ -232,12 +192,7 @@ class VragenlijstService
 
         clearOldInput();
 
-        return [
-            'ok' => true,
-            'flash_key' => 'vragenlijst_success',
-            'message' => 'Vraag succesvol opgeslagen.',
-            'redirect' => appUrl('vragenlijsten') . '?role_id=' . $roleId,
-        ];
+        return $this->success('vragenlijst_success', 'Vraag succesvol opgeslagen.', appUrl('vragenlijsten') . '?role_id=' . $roleId);
     }
 
     public function delete(array $input): array
@@ -246,40 +201,20 @@ class VragenlijstService
         $roleId = (int) ($input['Roleid'] ?? 0);
 
         if ($id <= 0) {
-            return [
-                'ok' => false,
-                'flash_key' => 'vragenlijst_error',
-                'message' => 'Ongeldige vraag geselecteerd.',
-                'redirect' => appUrl('vragenlijsten') . ($roleId > 0 ? '?role_id=' . $roleId : ''),
-            ];
+            return $this->error('vragenlijst_error', 'Ongeldige vraag geselecteerd.', appUrl('vragenlijsten') . ($roleId > 0 ? '?role_id=' . $roleId : ''));
         }
 
         $existing = $this->questionRepository->findById($id);
         if ($existing === null) {
-            return [
-                'ok' => false,
-                'flash_key' => 'vragenlijst_error',
-                'message' => 'Vraag niet gevonden.',
-                'redirect' => appUrl('vragenlijsten') . ($roleId > 0 ? '?role_id=' . $roleId : ''),
-            ];
+            return $this->error('vragenlijst_error', 'Vraag niet gevonden.', appUrl('vragenlijsten') . ($roleId > 0 ? '?role_id=' . $roleId : ''));
         }
 
         $affectedRows = $this->questionRepository->delete($id);
         if ($affectedRows < 1) {
-            return [
-                'ok' => false,
-                'flash_key' => 'vragenlijst_error',
-                'message' => 'Vraag kon niet worden verwijderd.',
-                'redirect' => appUrl('vragenlijsten') . ($roleId > 0 ? '?role_id=' . $roleId : ''),
-            ];
+            return $this->error('vragenlijst_error', 'Vraag kon niet worden verwijderd.', appUrl('vragenlijsten') . ($roleId > 0 ? '?role_id=' . $roleId : ''));
         }
 
-        return [
-            'ok' => true,
-            'flash_key' => 'vragenlijst_success',
-            'message' => 'Vraag succesvol verwijderd.',
-            'redirect' => appUrl('vragenlijsten') . ($roleId > 0 ? '?role_id=' . $roleId : ''),
-        ];
+        return $this->success('vragenlijst_success', 'Vraag succesvol verwijderd.', appUrl('vragenlijsten') . ($roleId > 0 ? '?role_id=' . $roleId : ''));
     }
 
     private function getOptionLinesForQuestion(int $questionId): string

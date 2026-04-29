@@ -54,12 +54,7 @@ class VragenlijstenController extends BaseController
     public function saveVraag(): void
     {
         $this->requireSuperAdmin();
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            throw new HttpException(405, 'Methode niet toegestaan');
-        }
-
+        $this->requirePost();
         CSRF::check();
 
         $result = $this->service->save($_POST);
@@ -70,12 +65,7 @@ class VragenlijstenController extends BaseController
     public function deleteVraag(): void
     {
         $this->requireSuperAdmin();
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            throw new HttpException(405, 'Methode niet toegestaan');
-        }
-
+        $this->requirePost();
         CSRF::check();
 
         $result = $this->service->delete($_POST);

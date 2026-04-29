@@ -39,6 +39,12 @@ class Logger
     {
         $this->log('INFO', $message, $context);
     }
+    /**
+     * Logs a debug message if debugging is enabled.
+     *
+     * @param string $message The debug message to log
+     * @param array|null $context Optional: context data to include in the log
+     */
 
     public function debug(string $message, ?array $context = null): void
     {
@@ -46,7 +52,13 @@ class Logger
             $this->log('DEBUG', $message, $context);
         }
     }
-
+    /**
+     * method to log to a file.
+      *
+      * @param string $level The log type (e.g., ERROR, WARNING, INFO, DEBUG)
+      * @param string $message The log message
+      * @param array|null $context Optional: context data to include in the log
+     */
     private function log(string $level, string $message, ?array $context = null): void
     {
         $timestamp = date('Y-m-d H:i:s');

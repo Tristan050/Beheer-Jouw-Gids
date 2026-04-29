@@ -1,6 +1,6 @@
 <?php
 
-class AandachtspuntService
+class AandachtspuntService extends BaseService
 {
     public function __construct(
         private readonly AandachtspuntRepository $repository = new AandachtspuntRepository(),
@@ -100,30 +100,15 @@ class AandachtspuntService
         ]);
 
         if ($functieId <= 0) {
-            return [
-                'ok' => false,
-                'flash_key' => 'aandachtspunten_form_error',
-                'message' => 'Selecteer een functie.',
-                'redirect' => appUrl('aandachtspunt-edit') . ($id > 0 ? '?id=' . $id : ''),
-            ];
+            return $this->error('aandachtspunten_form_error', 'Selecteer een functie.', appUrl('aandachtspunt-edit') . ($id > 0 ? '?id=' . $id : ''));
         }
 
         if ($this->functieRepository->findById($functieId) === null) {
-            return [
-                'ok' => false,
-                'flash_key' => 'aandachtspunten_form_error',
-                'message' => 'Geselecteerde functie bestaat niet.',
-                'redirect' => appUrl('aandachtspunt-edit') . ($id > 0 ? '?id=' . $id : ''),
-            ];
+            return $this->error('aandachtspunten_form_error', 'Geselecteerde functie bestaat niet.', appUrl('aandachtspunt-edit') . ($id > 0 ? '?id=' . $id : ''));
         }
 
         if ($aandachtspunt === '') {
-            return [
-                'ok' => false,
-                'flash_key' => 'aandachtspunten_form_error',
-                'message' => 'Aandachtspunt is verplicht.',
-                'redirect' => appUrl('aandachtspunt-edit') . ($id > 0 ? '?id=' . $id : ''),
-            ];
+            return $this->error('aandachtspunten_form_error', 'Aandachtspunt is verplicht.', appUrl('aandachtspunt-edit') . ($id > 0 ? '?id=' . $id : ''));
         }
 
         if ($id > 0) {
@@ -131,34 +116,19 @@ class AandachtspuntService
             if ($existing === null) {
                 clearOldInput();
 
-                return [
-                    'ok' => false,
-                    'flash_key' => 'aandachtspunten_error',
-                    'message' => 'Aandachtspunt niet gevonden.',
-                    'redirect' => appUrl('aandachtspunten'),
-                ];
+                return $this->error('aandachtspunten_error', 'Aandachtspunt niet gevonden.', appUrl('aandachtspunten'));
             }
 
             $this->repository->update($id, $functieId, $sortOrder, $aandachtspunt, $toelichting, $scanTekst, $adviesTekst);
             clearOldInput();
 
-            return [
-                'ok' => true,
-                'flash_key' => 'aandachtspunten_success',
-                'message' => 'Aandachtspunt succesvol bijgewerkt.',
-                'redirect' => appUrl('aandachtspunten'),
-            ];
+            return $this->success('aandachtspunten_success', 'Aandachtspunt succesvol bijgewerkt.', appUrl('aandachtspunten'));
         }
 
         $newId = $this->repository->create($functieId, $sortOrder, $aandachtspunt, $toelichting, $scanTekst, $adviesTekst);
         clearOldInput();
 
-        return [
-            'ok' => true,
-            'flash_key' => 'aandachtspunten_success',
-            'message' => 'Aandachtspunt succesvol toegevoegd (ID: ' . $newId . ').',
-            'redirect' => appUrl('aandachtspunten'),
-        ];
+        return $this->success('aandachtspunten_success', 'Aandachtspunt succesvol toegevoegd (ID: ' . $newId . ').', appUrl('aandachtspunten'));
     }
 
     public function delete(array $input): array
@@ -166,33 +136,18 @@ class AandachtspuntService
         $id = (int) ($input['AandachtspuntID'] ?? 0);
 
         if ($id <= 0) {
-            return [
-                'ok' => false,
-                'flash_key' => 'aandachtspunten_error',
-                'message' => 'Ongeldig aandachtspunt geselecteerd.',
-                'redirect' => appUrl('aandachtspunten'),
-            ];
+            return $this->error('aandachtspunten_error', 'Ongeldig aandachtspunt geselecteerd.', appUrl('aandachtspunten'));
         }
 
         $existing = $this->repository->findById($id);
         if ($existing === null) {
-            return [
-                'ok' => false,
-                'flash_key' => 'aandachtspunten_error',
-                'message' => 'Aandachtspunt niet gevonden.',
-                'redirect' => appUrl('aandachtspunten'),
-            ];
+            return $this->error('aandachtspunten_error', 'Aandachtspunt niet gevonden.', appUrl('aandachtspunten'));
         }
 
         $affectedRows = $this->repository->delete($id);
 
         if ($affectedRows < 1) {
-            return [
-                'ok' => false,
-                'flash_key' => 'aandachtspunten_error',
-                'message' => 'Aandachtspunt kon niet worden verwijderd.',
-                'redirect' => appUrl('aandachtspunten'),
-            ];
+            return $this->error('aandachtspunten_error', 'Aandachtspunt kon niet worden verwijderd.', appUrl('aandachtspunten'));
         }
 
         return [

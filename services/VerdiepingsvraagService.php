@@ -1,6 +1,6 @@
 <?php
 
-class VerdiepingsvraagService
+class VerdiepingsvraagService extends BaseService
 {
     public function __construct(
         private readonly VerdiepingsvraagRepository $repository = new VerdiepingsvraagRepository(),
@@ -80,30 +80,15 @@ class VerdiepingsvraagService
         ]);
 
         if ($aandachtspuntId <= 0) {
-            return [
-                'ok' => false,
-                'flash_key' => 'verdiepingsvragen_form_error',
-                'message' => 'Selecteer een aandachtspunt.',
-                'redirect' => appUrl('verdieping-vraag-edit') . ($id > 0 ? '?id=' . $id : ''),
-            ];
+            return $this->error('verdiepingsvragen_form_error', 'Selecteer een aandachtspunt.', appUrl('verdieping-vraag-edit') . ($id > 0 ? '?id=' . $id : ''));
         }
 
         if ($this->aandachtspuntRepository->findById($aandachtspuntId) === null) {
-            return [
-                'ok' => false,
-                'flash_key' => 'verdiepingsvragen_form_error',
-                'message' => 'Geselecteerd aandachtspunt bestaat niet.',
-                'redirect' => appUrl('verdieping-vraag-edit') . ($id > 0 ? '?id=' . $id : ''),
-            ];
+            return $this->error('verdiepingsvragen_form_error', 'Geselecteerd aandachtspunt bestaat niet.', appUrl('verdieping-vraag-edit') . ($id > 0 ? '?id=' . $id : ''));
         }
 
         if ($vraag === '') {
-            return [
-                'ok' => false,
-                'flash_key' => 'verdiepingsvragen_form_error',
-                'message' => 'Vraag is verplicht.',
-                'redirect' => appUrl('verdieping-vraag-edit') . ($id > 0 ? '?id=' . $id : ''),
-            ];
+            return $this->error('verdiepingsvragen_form_error', 'Vraag is verplicht.', appUrl('verdieping-vraag-edit') . ($id > 0 ? '?id=' . $id : ''));
         }
 
         if ($id > 0) {
@@ -111,34 +96,19 @@ class VerdiepingsvraagService
             if ($existing === null) {
                 clearOldInput();
 
-                return [
-                    'ok' => false,
-                    'flash_key' => 'verdiepingsvragen_error',
-                    'message' => 'Verdiepingsvraag niet gevonden.',
-                    'redirect' => appUrl('verdiepingsvragen'),
-                ];
+                return $this->error('verdiepingsvragen_error', 'Verdiepingsvraag niet gevonden.', appUrl('verdiepingsvragen'));
             }
 
             $this->repository->update($id, $aandachtspuntId, $vraag);
             clearOldInput();
 
-            return [
-                'ok' => true,
-                'flash_key' => 'verdiepingsvragen_success',
-                'message' => 'Verdiepingsvraag succesvol bijgewerkt.',
-                'redirect' => appUrl('verdiepingsvragen'),
-            ];
+            return $this->success('verdiepingsvragen_success', 'Verdiepingsvraag succesvol bijgewerkt.', appUrl('verdiepingsvragen'));
         }
 
         $newId = $this->repository->create($aandachtspuntId, $vraag);
         clearOldInput();
 
-        return [
-            'ok' => true,
-            'flash_key' => 'verdiepingsvragen_success',
-            'message' => 'Verdiepingsvraag succesvol toegevoegd (ID: ' . $newId . ').',
-            'redirect' => appUrl('verdiepingsvragen'),
-        ];
+        return $this->success('verdiepingsvragen_success', 'Verdiepingsvraag succesvol toegevoegd (ID: ' . $newId . ').', appUrl('verdiepingsvragen'));
     }
 
     public function delete(array $input): array
@@ -146,40 +116,20 @@ class VerdiepingsvraagService
         $id = (int) ($input['VerdiepingsvraagID'] ?? 0);
 
         if ($id <= 0) {
-            return [
-                'ok' => false,
-                'flash_key' => 'verdiepingsvragen_error',
-                'message' => 'Ongeldige verdiepingsvraag geselecteerd.',
-                'redirect' => appUrl('verdiepingsvragen'),
-            ];
+            return $this->error('verdiepingsvragen_error', 'Ongeldige verdiepingsvraag geselecteerd.', appUrl('verdiepingsvragen'));
         }
 
         $existing = $this->repository->findById($id);
         if ($existing === null) {
-            return [
-                'ok' => false,
-                'flash_key' => 'verdiepingsvragen_error',
-                'message' => 'Verdiepingsvraag niet gevonden.',
-                'redirect' => appUrl('verdiepingsvragen'),
-            ];
+            return $this->error('verdiepingsvragen_error', 'Verdiepingsvraag niet gevonden.', appUrl('verdiepingsvragen'));
         }
 
         $affectedRows = $this->repository->delete($id);
 
         if ($affectedRows < 1) {
-            return [
-                'ok' => false,
-                'flash_key' => 'verdiepingsvragen_error',
-                'message' => 'Verdiepingsvraag kon niet worden verwijderd.',
-                'redirect' => appUrl('verdiepingsvragen'),
-            ];
+            return $this->error('verdiepingsvragen_error', 'Verdiepingsvraag kon niet worden verwijderd.', appUrl('verdiepingsvragen'));
         }
 
-        return [
-            'ok' => true,
-            'flash_key' => 'verdiepingsvragen_success',
-            'message' => 'Verdiepingsvraag succesvol verwijderd.',
-            'redirect' => appUrl('verdiepingsvragen'),
-        ];
+        return $this->success('verdiepingsvragen_success', 'Verdiepingsvraag succesvol verwijderd.', appUrl('verdiepingsvragen'));
     }
 }

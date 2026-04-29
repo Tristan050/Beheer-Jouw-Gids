@@ -15,12 +15,17 @@ class BaseController
         }
     }
 
+    protected function requirePost(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            throw new HttpException(405, 'Methode niet toegestaan');
+        }
+    }
+
     protected function requireRole(string $role): void
     {
-        if (!isLoggedIn()) {
-            setFlash('auth_error', 'Log eerst in om verder te gaan.');
-            redirect(appUrl('login'));
-        }
+        self::auth();
 
         if (!hasRole($role)) {
             setFlash('auth_error', 'Je hebt geen toestemming om deze pagina te bezoeken.');
@@ -35,10 +40,7 @@ class BaseController
 
     protected function requireAdmin(): void
     {
-        if (!isLoggedIn()) {
-            setFlash('auth_error', 'Log eerst in om verder te gaan.');
-            redirect(appUrl('login'));
-        }
+        self::auth();
 
         if (!hasAnyRole(['super_admin', 'admin'])) {
             setFlash('auth_error', 'Je hebt geen toestemming om deze pagina te bezoeken.');

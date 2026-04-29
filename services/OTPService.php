@@ -14,6 +14,12 @@ class OTPService
 
     public function __construct(private readonly OTPRepository $repository = new OTPRepository()) {}
 
+    /**
+     * Generates a new OTP code for the given email and sends it via email.
+     *
+     * @param string $email The email address to send the OTP code to
+     * @return bool True if the code was generated and sent successfully, false otherwise
+     */
     public function generateAndSendCode(string $email): bool
     {
         $logger = Logger::getInstance();
@@ -61,7 +67,13 @@ class OTPService
     {
         return $this->lastError;
     }
-
+    /**
+     * Check if code is valid.
+     *
+     * @param string $email The email address associated with the code
+     * @param string $code The OTP code to validate
+     * @return array|null The valid code data or null if invalid
+     */
     public function validateCode(string $email, string $code): ?array
     {
         $email = strtolower(trim($email));
@@ -77,7 +89,11 @@ class OTPService
 
         return $validCode;
     }
-
+    /**
+     * Generates a new OTP code.
+     *
+     * @return string The generated OTP code
+     */
     private function generateCode(): string
     {
         $code = '';
@@ -86,6 +102,13 @@ class OTPService
         }
         return $code;
     }
+    /**
+     * Sends the OTP code via email. Maybe make email class in the future.
+     *
+     * @param string $email The email address to send the code to
+     * @param string $code The OTP code to send
+     * @return bool True if the email was sent successfully, false otherwise
+     */
 
     private function sendCodeByEmail(string $email, string $code): bool
     {
@@ -124,7 +147,7 @@ class OTPService
             return false;
         }
     }
-
+    
     private function getHTMLEmailBody(string $code): string
     {
         return "
