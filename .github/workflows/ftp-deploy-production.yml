@@ -20,7 +20,13 @@ jobs:
           tools: composer
 
       - name: Installeer dependencies
-        run: composer install --no-dev --optimize-autoloader
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Installeer Node dependencies
+        run: npm install
+
+      - name: Build frontend assets
+        run: npm run build
 
       - name: Upload naar FTP-server
         uses: samkirkland/ftp-deploy-action@v4.3.1
