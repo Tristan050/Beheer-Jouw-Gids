@@ -1,42 +1,69 @@
-<h1>Organisatie bewerken</h1>
+<?php
+$sidebar = [
+    'meta_label' => 'Editor',
+    'meta_value' => 'Organisatie',
+    'back_url' => appUrl('organisaties'),
+    'back_label' => 'Terug naar overzicht',
+];
+?>
 
-<?php if (!empty($data['form_error'])): ?>
-    <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><?= htmlspecialchars((string) $data['form_error']) ?></div>
-<?php endif; ?>
+<div class="min-h-screen bg-slate-50 text-slate-900">
+    <div class="flex min-h-screen">
+        <?php require __DIR__ . '/components/sidebar.view.php'; ?>
 
-<p><strong><?= !empty($data['form_values']['OrganisatieID']) ? 'Bewerken' : 'Nieuw'; ?></strong></p>
+        <div class="flex min-h-screen flex-1 flex-col">
+            <header class="border-b border-slate-200 bg-white/80 px-6 py-5 backdrop-blur">
+                <h1 class="text-2xl font-semibold tracking-tight">Organisatie bewerken</h1>
+            </header>
 
-<form id="organisatieForm" method="post" action="<?= htmlspecialchars(appUrl('organisatie-save')) ?>">
-    <?= CSRF::token() ?>
-    <input type="hidden" name="OrganisatieID" id="OrganisatieID" value="<?= htmlspecialchars((string) ($data['form_values']['OrganisatieID'] ?? '')) ?>">
+            <main class="flex-1 space-y-6 px-6 py-6">
+                <?php if (!empty($data['form_error'])): ?>
+                    <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><?= htmlspecialchars((string) $data['form_error']) ?></div>
+                <?php endif; ?>
 
-    <p>
-        <label for="Naam">Naam *</label><br>
-        <input type="text" name="Naam" id="Naam" placeholder="Bijv. Zorgorganisatie X" value="<?= htmlspecialchars((string) ($data['form_values']['Naam'] ?? '')) ?>" required>
-    </p>
+                <section class="max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <h2 class="text-lg font-semibold">Formulier organisatie</h2>
+                        <span class="inline-flex items-center rounded-full bg-[#A53714]/10 px-3 py-1 text-xs font-semibold text-[#A53714]"><?= !empty($data['form_values']['OrganisatieID']) ? 'Bewerken' : 'Nieuw'; ?></span>
+                    </div>
 
-    <p>
-        <label for="Adres">Adres</label><br>
-        <input type="text" name="Adres" id="Adres" placeholder="Straat + huisnummer" value="<?= htmlspecialchars((string) ($data['form_values']['Adres'] ?? '')) ?>">
-    </p>
+                    <form id="organisatieForm" method="post" action="<?= htmlspecialchars(appUrl('organisatie-save')) ?>" class="mt-6 space-y-4">
+                        <?= CSRF::token() ?>
+                        <input type="hidden" name="OrganisatieID" id="OrganisatieID" value="<?= htmlspecialchars((string) ($data['form_values']['OrganisatieID'] ?? '')) ?>">
 
-    <p>
-        <label for="Telefoon">Telefoon</label><br>
-        <input type="text" name="Telefoon" id="Telefoon" placeholder="Bijv. 0101234567" value="<?= htmlspecialchars((string) ($data['form_values']['Telefoon'] ?? '')) ?>">
-    </p>
+                        <div>
+                            <label for="Naam" class="block text-sm font-semibold text-slate-700">Naam *</label>
+                            <input type="text" name="Naam" id="Naam" class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" placeholder="Bijv. Zorgorganisatie X" value="<?= htmlspecialchars((string) ($data['form_values']['Naam'] ?? '')) ?>" required>
+                        </div>
 
-    <p>
-        <label for="Email">Email</label><br>
-        <input type="email" name="Email" id="Email" placeholder="contact@organisatie.nl" value="<?= htmlspecialchars((string) ($data['form_values']['Email'] ?? '')) ?>">
-    </p>
+                        <div>
+                            <label for="Adres" class="block text-sm font-semibold text-slate-700">Adres</label>
+                            <input type="text" name="Adres" id="Adres" class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" placeholder="Straat + huisnummer" value="<?= htmlspecialchars((string) ($data['form_values']['Adres'] ?? '')) ?>">
+                        </div>
 
-    <p>
-        <label for="Website">Website</label><br>
-        <input type="url" name="Website" id="Website" placeholder="https://www.organisatie.nl" value="<?= htmlspecialchars((string) ($data['form_values']['Website'] ?? '')) ?>">
-    </p>
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <div>
+                                <label for="Telefoon" class="block text-sm font-semibold text-slate-700">Telefoon</label>
+                                <input type="text" name="Telefoon" id="Telefoon" class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" placeholder="Bijv. 0101234567" value="<?= htmlspecialchars((string) ($data['form_values']['Telefoon'] ?? '')) ?>">
+                            </div>
+                            <div>
+                                <label for="Email" class="block text-sm font-semibold text-slate-700">Email</label>
+                                <input type="email" name="Email" id="Email" class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" placeholder="contact@organisatie.nl" value="<?= htmlspecialchars((string) ($data['form_values']['Email'] ?? '')) ?>">
+                            </div>
+                        </div>
 
-    <p>
-        <button type="submit">Opslaan</button>
-        <a href="<?= htmlspecialchars(appUrl('organisaties')) ?>">Annuleren</a>
-    </p>
-</form>
+                        <div>
+                            <label for="Website" class="block text-sm font-semibold text-slate-700">Website</label>
+                            <input type="url" name="Website" id="Website" class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" placeholder="https://www.organisatie.nl" value="<?= htmlspecialchars((string) ($data['form_values']['Website'] ?? '')) ?>">
+                        </div>
+
+                        <div class="flex flex-col gap-3 pt-2 sm:flex-row">
+                            <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#A53714] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8f2f11] focus:outline-none focus:ring-2 focus:ring-[#A53714]/30">Opslaan</button>
+                            <a href="<?= htmlspecialchars(appUrl('organisaties')) ?>" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">Annuleren</a>
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+    </div>
+</div>
