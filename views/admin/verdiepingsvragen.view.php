@@ -1,15 +1,13 @@
+<?php
+$sidebar = [
+	'meta_label' => 'Module',
+	'meta_value' => 'Verdiepingsvragen',
+	'active' => 'verdiepingsvragen',
+];
+?>
+
 <div class="admin-shell">
-	<aside class="admin-sidebar" aria-label="Hoofdmenu beheer">
-		<div class="sidebar-brand">Jouw-Gids Beheer</div>
-		<div class="sidebar-user">Module: <strong>Verdiepingsvragen</strong></div>
-		<nav class="space-y-2 mt-3" aria-label="Navigatie modules">
-			<a href="/admin" class="btn btn-secondary w-full">Dashboard</a>
-			<a href="/leefgebieden" class="btn btn-secondary w-full">Leefgebieden</a>
-			<a href="/functies" class="btn btn-secondary w-full">Functies</a>
-			<a href="/aandachtspunten" class="btn btn-secondary w-full">Aandachtspunten</a>
-			<a href="/verdiepingsvragen" class="btn w-full" style="background:#A53714;color:#fff;">Verdiepingsvragen</a>
-		</nav>
-	</aside>
+	<?php require __DIR__ . '/components/sidebar.view.php'; ?>
 
 	<div class="admin-content">
 		<header class="admin-topbar" style="background: linear-gradient(90deg, #fff 0%, #eef9ff 100%);">

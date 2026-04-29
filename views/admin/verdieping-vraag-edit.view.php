@@ -1,11 +1,14 @@
+<?php
+$sidebar = [
+	'meta_label' => 'Editor',
+	'meta_value' => 'Verdiepingsvraag',
+	'back_url' => appUrl('verdiepingsvragen'),
+	'back_label' => 'Terug naar overzicht',
+];
+?>
+
 <div class="admin-shell">
-	<aside class="admin-sidebar" aria-label="Hoofdmenu beheer">
-		<div class="sidebar-brand">Jouw-Gids Beheer</div>
-		<div class="sidebar-user">Editor: <strong>Verdiepingsvraag</strong></div>
-		<nav class="space-y-2 mt-3" aria-label="Navigatie modules">
-			<a href="/verdiepingsvragen" class="btn btn-secondary w-full">Terug naar overzicht</a>
-		</nav>
-	</aside>
+	<?php require __DIR__ . '/components/sidebar.view.php'; ?>
 
 	<div class="admin-content">
 		<header class="admin-topbar" style="background: linear-gradient(90deg, #fff 0%, #eef9ff 100%);">

@@ -1,15 +1,13 @@
+<?php
+$sidebar = [
+	'meta_label' => 'Module',
+	'meta_value' => 'Aandachtspunten',
+	'active' => 'aandachtspunten',
+];
+?>
+
 <div class="admin-shell">
-	<aside class="admin-sidebar" aria-label="Hoofdmenu beheer">
-		<div class="sidebar-brand">Jouw-Gids Beheer</div>
-		<div class="sidebar-user">Module: <strong>Aandachtspunten</strong></div>
-		<nav class="space-y-2 mt-3" aria-label="Navigatie modules">
-			<a href="/admin" class="btn btn-secondary w-full">Dashboard</a>
-			<a href="/leefgebieden" class="btn btn-secondary w-full">Leefgebieden</a>
-			<a href="/functies" class="btn btn-secondary w-full">Functies</a>
-			<a href="/aandachtspunten" class="btn w-full" style="background:#A53714;color:#fff;">Aandachtspunten</a>
-			<a href="/verdiepingsvragen" class="btn btn-secondary w-full">Verdiepingsvragen</a>
-		</nav>
-	</aside>
+	<?php require __DIR__ . '/components/sidebar.view.php'; ?>
 
 	<div class="admin-content">
 		<header class="admin-topbar" style="background: linear-gradient(90deg, #fff 0%, #f9f6ff 100%);">

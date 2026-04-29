@@ -9,62 +9,16 @@ $functiesUrl = appUrl('functies');
 $aandachtspuntenUrl = appUrl('aandachtspunten');
 $verdiepingsvragenUrl = appUrl('verdiepingsvragen');
 $logoutUrl = appUrl('logout');
+
+$sidebar = [
+    'variant' => 'dashboard',
+    'username' => $username,
+    'logout_url' => $logoutUrl,
+];
 ?>
 
 <div id="adminPanel" class="admin-shell">
-    <aside class="admin-sidebar" aria-label="Hoofdmenu" style="display:flex; background:#A53714; color:#fff; border-right:none;">
-        <div class="sidebar-brand" style="color:#fff; display:flex; align-items:center; gap:10px;">
-            <i class="fas fa-cog" aria-hidden="true"></i>
-            <span>Beheerpagina</span>
-        </div>
-
-        <div class="sidebar-user" style="color:rgba(255,255,255,0.9);">
-            Ingelogd als <strong id="usernameSidebar" style="color:#fff;">Administrator</strong>
-        </div>
-
-        <nav class="space-y-2 mt-3" aria-label="Navigatie modules">
-            <a href="<?= htmlspecialchars($leefgebiedenUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.1); color:#fff; justify-content:flex-start; gap:10px;">
-                <i class="fas fa-folder-open" aria-hidden="true"></i>
-                <span>Pas onderwerpen aan</span>
-            </a>
-            <a href="<?= htmlspecialchars($dashboardUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.2); color:#fff; justify-content:flex-start; gap:10px;">
-                <i class="fas fa-home" aria-hidden="true"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="<?= htmlspecialchars($aandachtspuntenUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.1); color:#fff; justify-content:flex-start; gap:10px;">
-                <i class="fas fa-list-alt" aria-hidden="true"></i>
-                <span>Laatst gemaakte scans</span>
-            </a>
-            <a href="<?= htmlspecialchars($functiesUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.1); color:#fff; justify-content:flex-start; gap:10px;">
-                <i class="fas fa-database" aria-hidden="true"></i>
-                <span>Check scan data</span>
-            </a>
-            <a href="<?= htmlspecialchars($verdiepingsvragenUrl) ?>" class="btn w-full" style="background:rgba(255,255,255,0.1); color:#fff; justify-content:flex-start; gap:10px;">
-                <i class="fas fa-chart-line" aria-hidden="true"></i>
-                <span>Vragenlijst data</span>
-            </a>
-        </nav>
-
-        <div style="margin-top:auto; border-top:1px solid rgba(255,255,255,0.2); padding-top:16px;">
-            <div style="display:flex; align-items:center; gap:10px; color:#fff; margin-bottom:12px;">
-                <span style="width:34px; height:34px; border-radius:9999px; background:rgba(255,255,255,0.2); display:inline-flex; align-items:center; justify-content:center;">
-                    <i class="fas fa-user" aria-hidden="true"></i>
-                </span>
-                <div>
-                    <div id="usernameSidebarBottom" style="font-weight:600; line-height:1.2;">Administrator</div>
-                    <div style="font-size:12px; opacity:0.85;">Administrator</div>
-                </div>
-            </div>
-
-            <form method="post" action="<?= htmlspecialchars($logoutUrl) ?>">
-                <?= CSRF::token() ?>
-                <button type="submit" class="btn w-full" style="background:rgba(255,255,255,0.14); color:#fff; gap:8px;">
-                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-                    <span>Uitloggen</span>
-                </button>
-            </form>
-        </div>
-    </aside>
+    <?php require __DIR__ . '/components/sidebar.view.php'; ?>
 
     <div class="admin-content transition-all duration-300">
         <header class="admin-topbar" aria-label="Bovenbalk">
