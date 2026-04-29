@@ -91,7 +91,7 @@ if ($variant === 'dashboard'):
                 ?>
                 <?php foreach ($links as $link): ?>
                     <?php $isActive = $link['key'] === $activeKey; ?>
-                    <a href="<?= htmlspecialchars($link['url']) ?>" class="btn<?= $isActive ? '' : ' btn-secondary' ?> w-full"<?= $isActive ? ' style="background:#A53714;color:#fff;"' : '' ?>>
+                    <a href="<?= htmlspecialchars($link['url']) ?>" class="btn<?= $isActive ? '' : ' btn-secondary' ?> w-full" <?= $isActive ? ' style="background:#A53714;color:#fff;"' : '' ?>>
                         <?= htmlspecialchars($link['label']) ?>
                     </a>
                 <?php endforeach; ?>
