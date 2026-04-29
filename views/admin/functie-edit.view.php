@@ -1,69 +1,74 @@
-<div class="admin-shell">
-	<aside class="admin-sidebar" aria-label="Hoofdmenu beheer">
-		<div class="sidebar-brand">Jouw-Gids Beheer</div>
-		<div class="sidebar-user">Editor: <strong>Functie</strong></div>
-		<nav class="space-y-2 mt-3" aria-label="Navigatie modules">
-			<a href="/functies" class="btn btn-secondary w-full">Terug naar overzicht</a>
-		</nav>
-	</aside>
+<?php
+$sidebar = [
+	'meta_label' => 'Editor',
+	'meta_value' => 'Functie',
+	'back_url' => appUrl('functies'),
+	'back_label' => 'Terug naar overzicht',
+];
+?>
 
-	<div class="admin-content">
-		<header class="admin-topbar" style="background: linear-gradient(90deg, #fff 0%, #f4fbf7 100%);">
-			<h1 class="topbar-title">Functie bewerken</h1>
-		</header>
+<div class="min-h-screen bg-slate-50 text-slate-900">
+	<div class="flex min-h-screen">
+		<?php require __DIR__ . '/components/sidebar.view.php'; ?>
 
-		<main class="page-wrap">
-			<?php if (!empty($data['form_error'])): ?>
-				<div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><?= htmlspecialchars((string) $data['form_error']) ?></div>
-			<?php endif; ?>
+		<div class="flex min-h-screen flex-1 flex-col">
+			<header class="border-b border-slate-200 bg-white/80 px-6 py-5 backdrop-blur">
+				<h1 class="text-2xl font-semibold tracking-tight">Functie bewerken</h1>
+			</header>
 
-			<section class="panel" style="max-width: 900px; border-color:#d5e8dc;">
-				<div class="panel-header">
-					<h2 class="panel-title">Formulier gids_functie</h2>
-					<span class="badge badge-primary"><?= !empty($data['form_values']['FunctieID']) ? 'Bewerken' : 'Nieuw'; ?></span>
-				</div>
+			<main class="flex-1 space-y-6 px-6 py-6">
+				<?php if (!empty($data['form_error'])): ?>
+					<div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><?= htmlspecialchars((string) $data['form_error']) ?></div>
+				<?php endif; ?>
 
-				<form id="functieForm" method="post" action="<?= htmlspecialchars(appUrl('functie-save')) ?>" class="space-y-4" data-table="gids_functie">
-					<?= CSRF::token() ?>
-					<input type="hidden" name="FunctieID" id="FunctieID" value="<?= htmlspecialchars((string) ($data['form_values']['FunctieID'] ?? '')) ?>">
-
-					<div>
-						<label for="LeefgebiedID" class="block text-sm font-semibold mb-1">LeefgebiedID *</label>
-						<select name="LeefgebiedID" id="LeefgebiedID" class="search-input" required>
-							<option value="">Selecteer een leefgebied</option>
-							<?php foreach (($data['leefgebieden'] ?? []) as $leefgebied): ?>
-								<?php
-								$optionId = (int) ($leefgebied['id'] ?? 0);
-								$selectedLeefgebiedId = (int) ($data['form_values']['LeefgebiedID'] ?? 0);
-								?>
-								<option value="<?= $optionId ?>" <?= $selectedLeefgebiedId === $optionId ? 'selected' : '' ?>>
-									<?= htmlspecialchars((string) ($leefgebied['name'] ?? '')) ?>
-								</option>
-							<?php endforeach; ?>
-						</select>
+				<section class="max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+					<div class="flex flex-wrap items-center justify-between gap-3">
+						<h2 class="text-lg font-semibold">Formulier gids_functie</h2>
+						<span class="inline-flex items-center rounded-full bg-[#A53714]/10 px-3 py-1 text-xs font-semibold text-[#A53714]"><?= !empty($data['form_values']['FunctieID']) ? 'Bewerken' : 'Nieuw'; ?></span>
 					</div>
 
-					<div>
-						<label for="Naam_functie" class="block text-sm font-semibold mb-1">Naam_functie *</label>
-						<input type="text" name="Naam_functie" id="Naam_functie" class="search-input" placeholder="Bijv. Dagbesteding" value="<?= htmlspecialchars((string) ($data['form_values']['Naam_functie'] ?? '')) ?>" required>
-					</div>
+					<form id="functieForm" method="post" action="<?= htmlspecialchars(appUrl('functie-save')) ?>" class="mt-6 space-y-4" data-table="gids_functie">
+						<?= CSRF::token() ?>
+						<input type="hidden" name="FunctieID" id="FunctieID" value="<?= htmlspecialchars((string) ($data['form_values']['FunctieID'] ?? '')) ?>">
 
-					<div>
-						<label for="Beschrijving_functie" class="block text-sm font-semibold mb-1">Beschrijving_functie</label>
-						<textarea name="Beschrijving_functie" id="Beschrijving_functie" rows="5" class="search-input" placeholder="Korte toelichting op de functie..."><?= htmlspecialchars((string) ($data['form_values']['Beschrijving_functie'] ?? '')) ?></textarea>
-					</div>
+						<div>
+							<label for="LeefgebiedID" class="block text-sm font-semibold text-slate-700">LeefgebiedID *</label>
+							<select name="LeefgebiedID" id="LeefgebiedID" class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" required>
+								<option value="">Selecteer een leefgebied</option>
+								<?php foreach (($data['leefgebieden'] ?? []) as $leefgebied): ?>
+									<?php
+									$optionId = (int) ($leefgebied['id'] ?? 0);
+									$selectedLeefgebiedId = (int) ($data['form_values']['LeefgebiedID'] ?? 0);
+									?>
+									<option value="<?= $optionId ?>" <?= $selectedLeefgebiedId === $optionId ? 'selected' : '' ?>>
+										<?= htmlspecialchars((string) ($leefgebied['name'] ?? '')) ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+						</div>
 
-					<div>
-						<label for="Sort_order" class="block text-sm font-semibold mb-1">Sort_order</label>
-						<input type="number" name="Sort_order" id="Sort_order" class="search-input" min="0" step="1" placeholder="10" value="<?= htmlspecialchars((string) ($data['form_values']['Sort_order'] ?? '0')) ?>">
-					</div>
+						<div>
+							<label for="Naam_functie" class="block text-sm font-semibold text-slate-700">Naam_functie *</label>
+							<input type="text" name="Naam_functie" id="Naam_functie" class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" placeholder="Bijv. Dagbesteding" value="<?= htmlspecialchars((string) ($data['form_values']['Naam_functie'] ?? '')) ?>" required>
+						</div>
 
-					<div class="flex flex-col sm:flex-row gap-3 pt-2">
-						<button type="submit" class="btn" style="background:#1f6f4a;color:#fff;">Opslaan</button>
-						<a href="<?= htmlspecialchars(appUrl('functies')) ?>" class="btn btn-secondary">Annuleren</a>
-					</div>
-				</form>
-			</section>
-		</main>
+						<div>
+							<label for="Beschrijving_functie" class="block text-sm font-semibold text-slate-700">Beschrijving_functie</label>
+							<textarea name="Beschrijving_functie" id="Beschrijving_functie" rows="5" class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" placeholder="Korte toelichting op de functie..."><?= htmlspecialchars((string) ($data['form_values']['Beschrijving_functie'] ?? '')) ?></textarea>
+						</div>
+
+						<div>
+							<label for="Sort_order" class="block text-sm font-semibold text-slate-700">Sort_order</label>
+							<input type="number" name="Sort_order" id="Sort_order" class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" min="0" step="1" placeholder="10" value="<?= htmlspecialchars((string) ($data['form_values']['Sort_order'] ?? '0')) ?>">
+						</div>
+
+						<div class="flex flex-col gap-3 pt-2 sm:flex-row">
+							<button type="submit" class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#A53714] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8f2f11] focus:outline-none focus:ring-2 focus:ring-[#A53714]/30">Opslaan</button>
+							<a href="<?= htmlspecialchars(appUrl('functies')) ?>" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">Annuleren</a>
+						</div>
+					</form>
+				</section>
+			</main>
+		</div>
 	</div>
 </div>

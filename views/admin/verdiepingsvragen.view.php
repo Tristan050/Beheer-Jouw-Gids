@@ -1,92 +1,95 @@
-<div class="admin-shell">
-	<aside class="admin-sidebar" aria-label="Hoofdmenu beheer">
-		<div class="sidebar-brand">Jouw-Gids Beheer</div>
-		<div class="sidebar-user">Module: <strong>Verdiepingsvragen</strong></div>
-		<nav class="space-y-2 mt-3" aria-label="Navigatie modules">
-			<a href="/admin" class="btn btn-secondary w-full">Dashboard</a>
-			<a href="/leefgebieden" class="btn btn-secondary w-full">Leefgebieden</a>
-			<a href="/functies" class="btn btn-secondary w-full">Functies</a>
-			<a href="/aandachtspunten" class="btn btn-secondary w-full">Aandachtspunten</a>
-			<a href="/verdiepingsvragen" class="btn w-full" style="background:#A53714;color:#fff;">Verdiepingsvragen</a>
-		</nav>
-	</aside>
+<?php
+$sidebar = [
+	'meta_label' => 'Module',
+	'meta_value' => 'Verdiepingsvragen',
+	'active' => 'verdiepingsvragen',
+];
+?>
 
-	<div class="admin-content">
-		<header class="admin-topbar" style="background: linear-gradient(90deg, #fff 0%, #eef9ff 100%);">
-			<h1 class="topbar-title">Verdiepingsvragen beheren</h1>
-		</header>
+<div class="min-h-screen bg-slate-50 text-slate-900">
+	<div class="flex min-h-screen">
+		<?php require __DIR__ . '/components/sidebar.view.php'; ?>
 
-		<main class="page-wrap">
-			<?php if (!empty($data['error'])): ?>
-				<div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><?= htmlspecialchars((string) $data['error']) ?></div>
-			<?php endif; ?>
+		<div class="flex min-h-screen flex-1 flex-col">
+			<header class="border-b border-slate-200 bg-white/80 px-6 py-5 backdrop-blur">
+				<h1 class="text-2xl font-semibold tracking-tight">Verdiepingsvragen beheren</h1>
+			</header>
 
-			<?php if (!empty($data['success'])): ?>
-				<div class="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"><?= htmlspecialchars((string) $data['success']) ?></div>
-			<?php endif; ?>
+			<main class="flex-1 space-y-6 px-6 py-6">
+				<?php if (!empty($data['error'])): ?>
+					<div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><?= htmlspecialchars((string) $data['error']) ?></div>
+				<?php endif; ?>
 
-			<nav class="breadcrumbs" aria-label="Breadcrumb">
-				<a href="/admin">Dashboard</a>
-				<span>/</span>
-				<span class="current">Verdiepingsvragen</span>
-			</nav>
+				<?php if (!empty($data['success'])): ?>
+					<div class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"><?= htmlspecialchars((string) $data['success']) ?></div>
+				<?php endif; ?>
 
-			<section class="panel" style="border-color:#cbe6f5; background: linear-gradient(160deg, #fff 0%, #f3fbff 100%);">
-				<div class="panel-header">
-					<div>
-						<h2 class="panel-title">Overzicht gids_verdieping_vragen</h2>
-						<p class="text-sm text-slate-600 mt-1">Veldkoppeling: <strong>VerdiepingsvraagID</strong>, <strong>Vraag</strong>, <strong>AandachtspuntID</strong>.</p>
-					</div>
-					<a href="<?= htmlspecialchars(appUrl('verdieping-vraag-edit')) ?>" class="btn" style="background:#0f6d99;color:#fff;">Nieuwe vraag</a>
-				</div>
+				<nav class="flex items-center gap-2 text-sm text-slate-500" aria-label="Breadcrumb">
+					<a href="/admin" class="font-medium text-slate-600 hover:text-slate-900">Dashboard</a>
+					<span class="text-slate-400">/</span>
+					<span class="font-medium text-slate-700">Verdiepingsvragen</span>
+				</nav>
 
-				<div class="toolbar">
-					<div class="toolbar-actions">
-						<div class="search-wrap" style="flex:1;">
-							<input id="verdiepingSearchInput" type="text" class="search-input" placeholder="Zoek op vraag of aandachtspunt..." />
-							<span class="search-icon" aria-hidden="true">&#128269;</span>
+				<section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+					<div class="flex flex-wrap items-start justify-between gap-4">
+						<div>
+							<h2 class="text-lg font-semibold">Overzicht gids_verdieping_vragen</h2>
+							<p class="mt-1 text-sm text-slate-600">Veldkoppeling: <strong>VerdiepingsvraagID</strong>, <strong>Vraag</strong>, <strong>AandachtspuntID</strong>.</p>
 						</div>
-						<button type="button" class="btn btn-secondary" onclick="document.getElementById('verdiepingSearchInput').value=''; filterVerdiepingsvragen();">Wissen</button>
+						<a href="<?= htmlspecialchars(appUrl('verdieping-vraag-edit')) ?>" class="inline-flex items-center gap-2 rounded-lg bg-[#A53714] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8f2f11] focus:outline-none focus:ring-2 focus:ring-[#A53714]/30">
+							<i class="fas fa-plus" aria-hidden="true"></i>
+							Nieuwe vraag
+						</a>
 					</div>
-				</div>
 
-				<div class="table-wrap">
-					<table class="data-table" id="verdiepingTable" data-source-table="gids_verdieping_vragen">
-						<thead>
-							<tr>
-								<th>VerdiepingsvraagID</th>
-								<th>Vraag</th>
-								<th>Aandachtspunt</th>
-								<th>Acties</th>
-							</tr>
-						</thead>
-						<tbody id="verdiepingTableBody">
-							<?php if (!empty($data['items'])): ?>
-								<?php foreach ($data['items'] as $row): ?>
-									<tr data-search="<?= htmlspecialchars((string) ($row['search'] ?? '')) ?>">
-										<td><?= (int) ($row['id'] ?? 0) ?></td>
-										<td><?= htmlspecialchars((string) ($row['vraag'] ?? '')) ?></td>
-										<td><?= htmlspecialchars((string) ($row['aandachtspunt_name'] ?? '')) ?></td>
-										<td class="flex gap-2 py-2">
-											<a href="<?= htmlspecialchars((string) ($row['edit_url'] ?? appUrl('verdieping-vraag-edit'))) ?>" class="btn btn-secondary">Bewerken</a>
-											<form method="post" action="<?= htmlspecialchars(appUrl('verdieping-vraag-delete')) ?>" onsubmit="return confirm('Weet je zeker dat je deze verdiepingsvraag wilt verwijderen?');" style="display:inline;">
-												<?= CSRF::token() ?>
-												<input type="hidden" name="VerdiepingsvraagID" value="<?= (int) ($row['id'] ?? 0) ?>">
-												<button type="submit" class="btn btn-secondary">Verwijderen</button>
-											</form>
-										</td>
-									</tr>
-								<?php endforeach; ?>
-							<?php else: ?>
+					<div class="mt-4 flex flex-wrap items-center gap-3">
+						<div class="relative min-w-[220px] flex-1">
+							<input id="verdiepingSearchInput" type="text" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 pr-9 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" placeholder="Zoek op vraag of aandachtspunt..." />
+							<span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">&#128269;</span>
+						</div>
+						<button type="button" class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50" onclick="document.getElementById('verdiepingSearchInput').value=''; filterVerdiepingsvragen();">Wissen</button>
+					</div>
+
+					<div class="mt-4 overflow-x-auto rounded-xl border border-slate-200">
+						<table class="min-w-full divide-y divide-slate-200" id="verdiepingTable" data-source-table="gids_verdieping_vragen">
+							<thead class="bg-slate-100 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
 								<tr>
-									<td colspan="4" class="text-center py-4">Nog geen verdiepingsvragen gevonden.</td>
+									<th class="px-4 py-3">VerdiepingsvraagID</th>
+									<th class="px-4 py-3">Vraag</th>
+									<th class="px-4 py-3">Aandachtspunt</th>
+									<th class="px-4 py-3">Acties</th>
 								</tr>
-							<?php endif; ?>
-						</tbody>
-					</table>
-				</div>
-			</section>
-		</main>
+							</thead>
+							<tbody id="verdiepingTableBody" class="divide-y divide-slate-200 bg-white">
+								<?php if (!empty($data['items'])): ?>
+									<?php foreach ($data['items'] as $row): ?>
+										<tr data-search="<?= htmlspecialchars((string) ($row['search'] ?? '')) ?>">
+											<td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['id'] ?? 0) ?></td>
+											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['vraag'] ?? '')) ?></td>
+											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['aandachtspunt_name'] ?? '')) ?></td>
+											<td class="px-4 py-3">
+												<div class="flex flex-wrap gap-2">
+													<a href="<?= htmlspecialchars((string) ($row['edit_url'] ?? appUrl('verdieping-vraag-edit'))) ?>" class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">Bewerken</a>
+													<form method="post" action="<?= htmlspecialchars(appUrl('verdieping-vraag-delete')) ?>" onsubmit="return confirm('Weet je zeker dat je deze verdiepingsvraag wilt verwijderen?');">
+														<?= CSRF::token() ?>
+														<input type="hidden" name="VerdiepingsvraagID" value="<?= (int) ($row['id'] ?? 0) ?>">
+														<button type="submit" class="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-semibold text-red-600 shadow-sm transition hover:bg-red-50">Verwijderen</button>
+													</form>
+												</div>
+											</td>
+										</tr>
+									<?php endforeach; ?>
+								<?php else: ?>
+									<tr>
+										<td colspan="4" class="px-4 py-6 text-center text-sm text-slate-500">Nog geen verdiepingsvragen gevonden.</td>
+									</tr>
+								<?php endif; ?>
+							</tbody>
+						</table>
+					</div>
+				</section>
+			</main>
+		</div>
 	</div>
 </div>
 
