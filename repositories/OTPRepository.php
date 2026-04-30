@@ -10,11 +10,12 @@ class OTPRepository
      */
     public function createCode(string $email, string $code, int $expiresInMinutes = 10): void
     {
-        $expiresAt = (new DateTime())->add(new DateInterval('PT' . $expiresInMinutes . 'M'));
+        $createdAt = time();
+        $expiresAt = $createdAt + ($expiresInMinutes * 60);
         
         execSQL(
-            'INSERT INTO gids_otp_codes (email, code, expires_at) VALUES (?, ?, ?)',
-            ['sss', $email, $code, $expiresAt->format('Y-m-d H:i:s')],
+            'INSERT INTO gids_otp_codes (email, code, created_at, expires_at) VALUES (?, ?, ?, ?)',
+            ['ssii', $email, $code, $createdAt, $expiresAt],
             true
         );
     }
@@ -26,12 +27,14 @@ class OTPRepository
      */
     public function findValidCode(string $email, string $code): ?array
     {
+        $now = time();
+
         $result = execSQL(
             'SELECT id, email, code, created_at, expires_at, used_at 
              FROM gids_otp_codes 
-             WHERE email = ? AND code = ? AND used_at IS NULL AND expires_at > NOW()
+             WHERE email = ? AND code = ? AND used_at IS NULL AND expires_at > ?
              ORDER BY created_at DESC LIMIT 1',
-            ['ss', $email, $code],
+            ['ssi', $email, $code, $now],
             false
         );
 
@@ -44,9 +47,9 @@ class OTPRepository
             'id' => (int) ($row['id'] ?? 0),
             'email' => (string) ($row['email'] ?? ''),
             'code' => (string) ($row['code'] ?? ''),
-            'created_at' => (string) ($row['created_at'] ?? ''),
-            'expires_at' => (string) ($row['expires_at'] ?? ''),
-            'used_at' => $row['used_at'] ?? null,
+            'created_at' => (int) ($row['created_at'] ?? 0),
+            'expires_at' => (int) ($row['expires_at'] ?? 0),
+            'used_at' => isset($row['used_at']) ? (int) $row['used_at'] : null,
         ];
     }
     /**
@@ -55,9 +58,11 @@ class OTPRepository
      */
     public function markCodeAsUsed(int $codeId): void
     {
+        $now = time();
+
         execSQL(
-            'UPDATE gids_otp_codes SET used_at = NOW() WHERE id = ?',
-            ['i', $codeId],
+            'UPDATE gids_otp_codes SET used_at = ? WHERE id = ?',
+            ['ii', $now, $codeId],
             true
         );
     }
@@ -69,12 +74,12 @@ class OTPRepository
      */
     public function countRecentCodes(string $email, int $minutesWindow = 10): int
     {
-        $windowStart = (new DateTime())->sub(new DateInterval('PT' . $minutesWindow . 'M'));
+        $windowStart = time() - ($minutesWindow * 60);
         
         $result = execSQL(
             'SELECT COUNT(*) as code_count FROM gids_otp_codes 
              WHERE email = ? AND created_at >= ?',
-            ['ss', $email, $windowStart->format('Y-m-d H:i:s')],
+            ['si', $email, $windowStart],
             false
         );
 
@@ -90,9 +95,11 @@ class OTPRepository
      */
     public function deleteExpiredCodes(): int
     {
+        $now = time();
+
         return (int) execSQL(
-            'DELETE FROM gids_otp_codes WHERE expires_at < NOW()',
-            [],
+            'DELETE FROM gids_otp_codes WHERE expires_at < ?',
+            ['i', $now],
             true
         );
     }

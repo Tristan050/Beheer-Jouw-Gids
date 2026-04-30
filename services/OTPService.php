@@ -116,38 +116,36 @@ class OTPService
         $mail = new PHPMailer(true);
 
         try {
-            $mail->isSMTP();
-            $mail->Host = getenv('MAIL_HOST');
-            $mail->Port = (int)getenv('MAIL_PORT');
-            $mail->SMTPAuth = true;
-            $mail->Username = getenv('MAIL_USERNAME');
-            $mail->Password = getenv('MAIL_PASSWORD');
-            $mail->SMTPSecure = getenv('MAIL_ENCRYPTION');
-            $mail->setFrom(getenv('MAIL_FROM') ?: 'noreply@jouwgids.nl', 'Beheer Jouw Gids');
+            $mail->CharSet = 'UTF-8';
+            $mail->Encoding = 'base64';
+            $mail->isHTML(true);
+
+            $mail->setFrom('noreply@jouwgids.nl', 'Beheer Jouw Gids');
             $mail->addAddress($email);
 
-            $mail->isHTML(true);
             $mail->Subject = 'Je verificatiecode is: ' . $code;
 
-            $htmlBody = $this->getHTMLEmailBody($code);
-            $mail->Body = $htmlBody;
+            $mail->Body = $this->getHTMLEmailBody($code);
             $mail->AltBody = $this->getPlainTextEmailBody($code);
 
             $mail->send();
+
             $logger->info('OTP email sent.', [
                 'email' => $email,
             ]);
+
             return true;
-        } catch (PHPMailerException $e) {
+        } catch (Exception $e) {
             $logger->error('OTP email failed.', [
                 'email' => $email,
                 'exception' => $e->getMessage(),
             ]);
-            $this->lastError = 'Kon verificatiecode niet versturen. Controleer de logs.';
+
+            $this->lastError = 'Kon verificatiecode niet versturen.';
             return false;
         }
     }
-    
+
     private function getHTMLEmailBody(string $code): string
     {
         return "
