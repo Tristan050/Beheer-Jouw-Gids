@@ -5,6 +5,32 @@ function isLoggedIn(): bool
     return !empty($_SESSION['user_id']);
 }
 
+function hasRole(string $role): bool
+{
+    $userRoles = $_SESSION['user_roles'] ?? [];
+    return in_array($role, $userRoles, true);
+}
+
+function hasAnyRole(array $roles): bool
+{
+    return AuthService::hasAnyRole($roles);
+}
+
+function isSuperAdmin(): bool
+{
+    return hasRole('super_admin');
+}
+
+function isAdmin(): bool
+{
+    return hasAnyRole(['super_admin', 'admin']);
+}
+
+function isUserVerified(): bool
+{
+    return (bool) ($_SESSION['user_verified'] ?? false);
+}
+
 function appUrl(string $path = ''): string
 {
     $baseUrl = defined('APP_BASE_URL') ? rtrim((string) APP_BASE_URL, '/') : '';

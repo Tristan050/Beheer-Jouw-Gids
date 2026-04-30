@@ -2,20 +2,26 @@
 
 class CSRF
 {
-    public static function init()
+    public static function init(): void
     {
         if (!isset($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         }
     }
 
-    public static function token()
+    public static function token(): string
     {
         self::init();
         return '<input type="hidden" id="csrf_token" name="csrf_token" value="' .
             htmlspecialchars($_SESSION['csrf_token']) . '">';
     }
 
+    /**
+     * Checks if CSRF token is valid. Redirects to login with a flash if invalid.
+     * 
+     * @param string|null $token
+     * @return bool
+     */
     public static function check($token = null)
     {
         self::init();
@@ -39,8 +45,6 @@ class CSRF
 
         return true;
     }
-
-
 
     public static function reset()
     {
