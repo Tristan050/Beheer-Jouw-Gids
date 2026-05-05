@@ -16,6 +16,8 @@ $aandachtspuntenUrl = appUrl('aandachtspunten');
 $verdiepingsvragenUrl = appUrl('verdiepingsvragen');
 $vragenlijstenUrl = appUrl('vragenlijsten');
 $organisatiesUrl = appUrl('organisaties');
+$hulpbronnenUrl = appUrl('hulpbronnen');
+$leefgebiedHulpbronKoppelingenUrl = appUrl('leefgebied-hulpbron-koppelingen');
 $verdiepingKoppelingenUrl = appUrl('verdieping-koppelingen');
 
 $linkBase = 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition';
@@ -99,6 +101,8 @@ if ($variant === 'dashboard'):
                     ['key' => 'leefgebieden', 'url' => $leefgebiedenUrl, 'label' => 'Leefgebieden'],
                     ['key' => 'functies', 'url' => $functiesUrl, 'label' => 'Functies'],
                     ['key' => 'aandachtspunten', 'url' => $aandachtspuntenUrl, 'label' => 'Aandachtspunten'],
+                    ['key' => 'hulpbronnen', 'url' => $hulpbronnenUrl, 'label' => 'Hulpbronnen'],
+                    ['key' => 'leefgebied-hulpbron-koppelingen', 'url' => $leefgebiedHulpbronKoppelingenUrl, 'label' => 'Hulpbron koppelingen'],
                     ['key' => 'verdiepingsvragen', 'url' => $verdiepingsvragenUrl, 'label' => 'Verdiepingsvragen'],
                     ['key' => 'vragenlijsten', 'url' => $vragenlijstenUrl, 'label' => 'Vragenlijsten'],
                     ['key' => 'organisaties', 'url' => $organisatiesUrl, 'label' => 'Organisaties'],

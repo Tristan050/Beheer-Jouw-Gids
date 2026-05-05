@@ -50,7 +50,7 @@ class LeefgebiedRepository extends BaseRepository
         return new LeefgebiedDTO(
             (int) ($row['LeefgebiedID'] ?? 0),
             (string) ($row['Naam_leefgebied'] ?? ''),
-            (string) ($row['beschrijving_leefgebied'] ?? ''),
+            (string) ($row['beschrijving_leefgebied'] ?? $row['Beschrijving_leefgebied'] ?? ''),
             (int) ($row['Sort_order'] ?? 0)
         );
     }
