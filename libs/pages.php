@@ -102,6 +102,34 @@ return [
             'controller' => 'OrganisatiesController',
             'method' => 'delete',
         ],
+        'hulpbronnen' => [
+            'controller' => 'HulpbronnenController',
+            'method' => 'index',
+        ],
+        'hulpbron-edit' => [
+            'controller' => 'HulpbronnenController',
+            'method' => 'edit',
+        ],
+        'hulpbron-save' => [
+            'controller' => 'HulpbronnenController',
+            'method' => 'save',
+        ],
+        'hulpbron-delete' => [
+            'controller' => 'HulpbronnenController',
+            'method' => 'delete',
+        ],
+        'leefgebied-hulpbron-koppelingen' => [
+            'controller' => 'LeefgebiedHulpbronKoppelingenController',
+            'method' => 'index',
+        ],
+        'leefgebied-hulpbron-koppeling-save' => [
+            'controller' => 'LeefgebiedHulpbronKoppelingenController',
+            'method' => 'save',
+        ],
+        'leefgebied-hulpbron-koppeling-delete' => [
+            'controller' => 'LeefgebiedHulpbronKoppelingenController',
+            'method' => 'delete',
+        ],
         'verdieping-koppelingen' => [
             'controller' => 'VerdiepingKoppelingenController',
             'method' => 'index',

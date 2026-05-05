@@ -14,6 +14,14 @@
                 <p class="text-xs mt-1.5 opacity-90">De code is 10 minuten geldig</p>
             </div>
 
+            <?php if ($data['debug_mode'] && $data['debug_code']): ?>
+                <div class="mb-4 rounded-xl border">
+                    <p class="font-semibold">Debug Mode - Verificatiecode:</p>
+                    <p class="text-2xl font-bold tracking-widest text-yellow-900 mt-2"><?= htmlspecialchars($data['debug_code']) ?></p>
+                    <p class="text-xs mt-2 opacity-90">Deze code wordt alleen getoond in debug modus. Email is niet verzonden.</p>
+                </div>
+            <?php endif; ?>
+
             <?php if (!empty($data['error'])): ?>
                 <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><?= htmlspecialchars((string) $data['error']) ?></div>
             <?php endif; ?>

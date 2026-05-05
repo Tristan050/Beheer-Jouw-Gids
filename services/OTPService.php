@@ -18,20 +18,21 @@ class OTPService
      * Generates a new OTP code for the given email and sends it via email.
      *
      * @param string $email The email address to send the OTP code to
-     * @return bool True if the code was generated and sent successfully, false otherwise
+     * @return array Array with keys: 'success' (bool), 'code' (string|null for debug), 'debug' (bool)
      */
-    public function generateAndSendCode(string $email): bool
+    public function generateAndSendCode(string $email): array
     {
         $logger = Logger::getInstance();
         $this->lastError = null;
         $email = strtolower(trim($email));
+        $debugMode = jg_db_debug_enabled();
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $logger->warning('OTP request rejected for invalid email.', [
                 'email' => $email,
             ]);
             $this->lastError = 'Vul een geldig e-mailadres in.';
-            return false;
+            return ['success' => false, 'code' => null, 'debug' => false];
         }
 
         $recentCodeCount = $this->repository->countRecentCodes($email, self::WINDOW_MINUTES);
@@ -43,7 +44,7 @@ class OTPService
                 'max_codes' => self::MAX_CODES_PER_WINDOW,
             ]);
             $this->lastError = 'Je hebt te vaak een code aangevraagd. Probeer het over ongeveer 10 minuten opnieuw.';
-            return false;
+            return ['success' => false, 'code' => null, 'debug' => false];
         }
 
         $code = $this->generateCode();
@@ -51,8 +52,15 @@ class OTPService
         $mailSent = $this->sendCodeByEmail($email, $code);
 
         if (!$mailSent) {
-            $this->lastError = 'Kon verificatiecode niet versturen. Controleer de logs.';
-            return false;
+            // In debug mode, allow the flow to continue even if email fails
+            if (!$debugMode) {
+                $this->lastError = 'Kon verificatiecode niet versturen. Controleer de logs.';
+                return ['success' => false, 'code' => null, 'debug' => false];
+            }
+            $logger->warning('OTP email failed in debug mode, continuing with local code.', [
+                'email' => $email,
+                'code' => $code,
+            ]);
         }
 
         $this->repository->createCode($email, $code, self::EXPIRES_IN_MINUTES);
@@ -60,7 +68,8 @@ class OTPService
             'email' => $email,
             'expires_in_minutes' => self::EXPIRES_IN_MINUTES,
         ]);
-        return true;
+        
+        return ['success' => true, 'code' => $debugMode ? $code : null, 'debug' => $debugMode];
     }
 
     public function getLastError(): ?string

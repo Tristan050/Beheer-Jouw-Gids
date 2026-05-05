@@ -34,7 +34,7 @@ $sidebar = [
 					<div class="flex flex-wrap items-start justify-between gap-4">
 						<div>
 							<h2 class="text-lg font-semibold">Overzicht gids_leefgebied</h2>
-							<p class="mt-1 text-sm text-slate-600">Veldkoppeling: <strong>LeefgebiedID</strong>, <strong>Naam_leefgebied</strong>, <strong>beschrijving_leefgebied</strong>, <strong>Sort_order</strong>.</p>
+							<p class="mt-1 text-sm text-slate-600">Veldkoppeling: <strong>LeefgebiedID</strong>, <strong>Naam_leefgebied</strong>, <strong>Beschrijving_leefgebied</strong>, <strong>Sort_order</strong>.</p>
 						</div>
 						<a href="<?= htmlspecialchars(appUrl('leefgebied-edit')) ?>" class="inline-flex items-center gap-2 rounded-lg bg-[#A53714] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8f2f11] focus:outline-none focus:ring-2 focus:ring-[#A53714]/30">
 							<i class="fas fa-plus" aria-hidden="true"></i>
@@ -56,7 +56,7 @@ $sidebar = [
 								<tr>
 									<th class="px-4 py-3">LeefgebiedID</th>
 									<th class="px-4 py-3">Naam_leefgebied</th>
-									<th class="px-4 py-3">beschrijving_leefgebied</th>
+									<th class="px-4 py-3">Beschrijving_leefgebied</th>
 									<th class="px-4 py-3">Sort_order</th>
 									<th class="px-4 py-3">Acties</th>
 								</tr>
