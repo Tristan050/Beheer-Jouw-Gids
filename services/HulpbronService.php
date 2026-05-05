@@ -61,7 +61,7 @@ class HulpbronService extends BaseService
             'HulpbronID' => old('HulpbronID', $item !== null ? (string) $item->id : ''),
             'Hulpbron' => old('Hulpbron', $item !== null ? $item->name : ''),
             'Toelichting' => old('Toelichting', $item !== null ? ($item->description ?? '') : ''),
-            'selected_leefgebieden' => old('selected_leefgebieden', $selectedLeefgebieden),
+            'selected_leefgebieden' => $_SESSION['old_input']['selected_leefgebieden'] ?? $selectedLeefgebieden,
         ];
     }
 
