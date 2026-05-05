@@ -56,6 +56,7 @@ class OTPController extends BaseController
                             $_SESSION['user_verified'] = (bool) ($user['is_verified'] ?? false);
 
                             unset($_SESSION['otp_email']);
+                            unset($_SESSION['otp_debug_code']);
 
                             redirect(appUrl('admin'));
                         }
@@ -66,9 +67,13 @@ class OTPController extends BaseController
             }
         }
 
+        $debugCode = $_SESSION['otp_debug_code'] ?? null;
+        
         $this->render('auth/otp-verify', [
             'error' => $error,
             'email' => $email,
+            'debug_code' => $debugCode,
+            'debug_mode' => jg_db_debug_enabled(),
         ]);
     }
 
@@ -77,6 +82,7 @@ class OTPController extends BaseController
         $this->requirePost();
         CSRF::check();
         unset($_SESSION['otp_email']);
+        unset($_SESSION['otp_debug_code']);
         session_destroy();
         redirect(appUrl('login'));
     }

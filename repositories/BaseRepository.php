@@ -10,7 +10,32 @@ abstract class BaseRepository
 
     protected function orderBy(): string
     {
+        if ($this->hasColumn('Sort_order')) {
+            return 'Sort_order ASC';
+        }
+
         return $this->idColumn() . ' ASC';
+    }
+
+    /**
+     * Check whether the current table has the given column.
+     * Uses a simple cache to avoid repeated SHOW COLUMNS calls.
+     */
+    protected function hasColumn(string $column): bool
+    {
+        static $cache = [];
+
+        $key = $this->tableName() . '|' . $column;
+        if (isset($cache[$key])) {
+            return $cache[$key];
+        }
+
+        $sql = "SHOW COLUMNS FROM " . $this->tableName() . " LIKE '" . $column . "'";
+        $result = execSQL($sql, [], false);
+        $has = (bool) ($result && $result->num_rows > 0);
+        $cache[$key] = $has;
+
+        return $has;
     }
 
     protected function getAllRows(): array

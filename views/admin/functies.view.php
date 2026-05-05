@@ -34,7 +34,7 @@ $sidebar = [
 					<div class="flex flex-wrap items-start justify-between gap-4">
 						<div>
 							<h2 class="text-lg font-semibold">Overzicht gids_functie</h2>
-							<p class="mt-1 text-sm text-slate-600">Veldkoppeling: <strong>FunctieID</strong>, <strong>LeefgebiedID</strong>, <strong>Naam_functie</strong>, <strong>Beschrijving_functie</strong>, <strong>Sort_order</strong>.</p>
+							<p class="mt-1 text-sm text-slate-600">Veldkoppeling: <strong>FunctieID</strong>, <strong>Leefgebied</strong>, <strong>Naam_functie</strong>, <strong>Beschrijving_functie</strong>, <strong>Sort_order</strong>.</p>
 						</div>
 						<a href="<?= htmlspecialchars(appUrl('functie-edit')) ?>" class="inline-flex items-center gap-2 rounded-lg bg-[#A53714] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8f2f11] focus:outline-none focus:ring-2 focus:ring-[#A53714]/30">
 							<i class="fas fa-plus" aria-hidden="true"></i>
@@ -67,7 +67,7 @@ $sidebar = [
 									<?php foreach ($data['items'] as $row): ?>
 										<tr data-search="<?= htmlspecialchars((string) ($row['search'] ?? '')) ?>">
 											<td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['id'] ?? 0) ?></td>
-											<td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['leefgebied_id'] ?? 0) ?></td>
+							<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['leefgebied'] ?? '')) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['name'] ?? '')) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['description'] ?? '')) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['sort_order'] ?? 0) ?></td>

@@ -44,7 +44,13 @@ class AuthController extends BaseController
 
                     $_SESSION['otp_email'] = $email;
 
-                    if ($this->otpService->generateAndSendCode($email)) {
+                    $otpResult = $this->otpService->generateAndSendCode($email);
+                    
+                    if ($otpResult['success']) {
+                        // Store debug code in session if in debug mode
+                        if ($otpResult['debug'] && $otpResult['code']) {
+                            $_SESSION['otp_debug_code'] = $otpResult['code'];
+                        }
                         clearOldInput();
                         redirect(appUrl('otp-verify'));
                     }

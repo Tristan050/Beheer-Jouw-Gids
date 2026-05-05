@@ -25,9 +25,16 @@ class FunctieService extends BaseService
     {
         $items = $this->repository->getAll();
 
-        return array_map(function (FunctieDTO $item): array {
+        $leefgebieden = $this->leefgebiedRepository->getAll();
+        $leefgebiedMap = [];
+        foreach ($leefgebieden as $l) {
+            $leefgebiedMap[$l->id] = $l->name;
+        }
+
+        return array_map(function (FunctieDTO $item) use ($leefgebiedMap): array {
             $id = $item->id;
             $leefgebiedId = $item->leefgebiedId;
+            $leefgebiedName = $leefgebiedMap[$leefgebiedId] ?? '';
             $name = $item->name;
             $description = $item->description;
             $sortOrder = $item->sortOrder;
@@ -35,10 +42,11 @@ class FunctieService extends BaseService
             return [
                 'id' => $id,
                 'leefgebied_id' => $leefgebiedId,
+                'leefgebied' => $leefgebiedName,
                 'name' => $name,
                 'description' => $description,
                 'sort_order' => $sortOrder,
-                'search' => strtolower(trim($id . ' ' . $leefgebiedId . ' ' . $name . ' ' . $description . ' ' . $sortOrder)),
+                'search' => strtolower(trim($id . ' ' . $leefgebiedName . ' ' . $name . ' ' . $description . ' ' . $sortOrder)),
                 'edit_url' => appUrl('functie-edit') . '?id=' . $id,
             ];
         }, $items);
