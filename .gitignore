@@ -33,7 +33,4 @@ docker/mysql-init/
 db_data/
 
 # Extra
-
-/libs/functions_dbs_mysqli.php
-
 /database
