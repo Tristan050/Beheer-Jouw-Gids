@@ -2,16 +2,9 @@
 
 class OTPRepository
 {
-    private const DATETIME_FORMAT = 'Y-m-d H:i:s';
-
-    private function now(): DateTimeImmutable
+    private function now(): int
     {
-        return new DateTimeImmutable('now', new DateTimeZone('UTC'));
-    }
-
-    private function formatDateTime(DateTimeInterface $dateTime): string
-    {
-        return $dateTime->setTimezone(new DateTimeZone('UTC'))->format(self::DATETIME_FORMAT);
+        return time();
     }
 
     /**
@@ -22,13 +15,12 @@ class OTPRepository
      */
     public function createCode(string $email, string $code, int $expiresInMinutes = 10): void
     {
-        $now = $this->now();
-        $createdAt = $this->formatDateTime($now);
-        $expiresAt = $this->formatDateTime($now->modify('+' . $expiresInMinutes . ' minutes'));
+        $createdAt = $this->now();
+        $expiresAt = $createdAt + ($expiresInMinutes * 60);
         
         execSQL(
             'INSERT INTO gids_otp_codes (email, code, created_at, expires_at) VALUES (?, ?, ?, ?)',
-            ['ssss', $email, $code, $createdAt, $expiresAt],
+            ['ssii', $email, $code, $createdAt, $expiresAt],
             true
         );
     }
@@ -40,14 +32,14 @@ class OTPRepository
      */
     public function findValidCode(string $email, string $code): ?array
     {
-        $now = $this->formatDateTime($this->now());
+        $now = $this->now();
 
         $result = execSQL(
             'SELECT id, email, code, created_at, expires_at, used_at 
              FROM gids_otp_codes 
              WHERE email = ? AND code = ? AND used_at IS NULL AND expires_at > ?
              ORDER BY created_at DESC LIMIT 1',
-            ['sss', $email, $code, $now],
+            ['ssi', $email, $code, $now],
             false
         );
 
@@ -60,9 +52,9 @@ class OTPRepository
             'id' => (int) ($row['id'] ?? 0),
             'email' => (string) ($row['email'] ?? ''),
             'code' => (string) ($row['code'] ?? ''),
-            'created_at' => $row['created_at'] ?? null,
-            'expires_at' => $row['expires_at'] ?? null,
-            'used_at' => $row['used_at'] ?? null,
+            'created_at' => isset($row['created_at']) ? (int) $row['created_at'] : null,
+            'expires_at' => isset($row['expires_at']) ? (int) $row['expires_at'] : null,
+            'used_at' => isset($row['used_at']) ? (int) $row['used_at'] : null,
         ];
     }
     /**
@@ -71,11 +63,11 @@ class OTPRepository
      */
     public function markCodeAsUsed(int $codeId): void
     {
-        $now = $this->formatDateTime($this->now());
+        $now = $this->now();
 
         execSQL(
             'UPDATE gids_otp_codes SET used_at = ? WHERE id = ?',
-            ['si', $now, $codeId],
+            ['ii', $now, $codeId],
             true
         );
     }
@@ -87,12 +79,12 @@ class OTPRepository
      */
     public function countRecentCodes(string $email, int $minutesWindow = 10): int
     {
-        $windowStart = $this->formatDateTime($this->now()->modify('-' . $minutesWindow . ' minutes'));
+        $windowStart = $this->now() - ($minutesWindow * 60);
         
         $result = execSQL(
             'SELECT COUNT(*) as code_count FROM gids_otp_codes 
              WHERE email = ? AND created_at >= ?',
-            ['ss', $email, $windowStart],
+            ['si', $email, $windowStart],
             false
         );
 
@@ -108,11 +100,11 @@ class OTPRepository
      */
     public function deleteExpiredCodes(): int
     {
-        $now = $this->formatDateTime($this->now());
+        $now = $this->now();
 
         return (int) execSQL(
             'DELETE FROM gids_otp_codes WHERE expires_at < ?',
-            ['s', $now],
+            ['i', $now],
             true
         );
     }
