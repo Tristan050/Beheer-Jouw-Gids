@@ -57,3 +57,5 @@ set_exception_handler(function (Throwable $e) {
 header("X-Content-Type-Options: nosniff");
 header("Referrer-Policy: strict-origin-when-cross-origin");
 header("X-Frame-Options: SAMEORIGIN");
+
+date_default_timezone_set('Europe/Amsterdam');

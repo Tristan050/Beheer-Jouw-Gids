@@ -37,9 +37,9 @@ class OTPController extends BaseController
             if ($code === '') {
                 $error = 'Vul de verificatiecode in.';
             } else {
-                $validCode = $this->otpService->validateCode($email, $code);
+                $validationResult = $this->otpService->validateCode($email, $code);
 
-                if ($validCode !== null) {
+                if (!empty($validationResult['success'])) {
                     $user = $this->userRepository->findActiveUserByEmail($email);
 
                     if ($user === null) {
@@ -49,6 +49,7 @@ class OTPController extends BaseController
                         if (!array_intersect($userRoles, ['super_admin', 'admin'])) {
                             $error = 'Je hebt geen toegang tot dit admin-paneel.';
                         } else {
+                            $this->otpService->clearRequestAttempts($email);
                             session_regenerate_id(true);
 
                             $_SESSION['user_id'] = (int) $user['id'];
@@ -62,7 +63,7 @@ class OTPController extends BaseController
                         }
                     }
                 } else {
-                    $error = 'Ongeldige of verlopen verificatiecode.';
+                    $error = $validationResult['message'] ?? 'Ongeldige of verlopen verificatiecode.';
                 }
             }
         }

@@ -55,7 +55,7 @@ class AuthController extends BaseController
                         redirect(appUrl('otp-verify'));
                     }
 
-                    $error = $this->otpService->getLastError() ?? 'Kon verificatiecode niet versturen. Controleer de logs.';
+                    $error = $otpResult['message'] ?? 'Kon verificatiecode niet versturen. Controleer de logs.';
                 } elseif (is_array($loginResult)) {
                     $error = $loginResult['message'] ?? 'Ongeldige inloggegevens.';
                 } else {

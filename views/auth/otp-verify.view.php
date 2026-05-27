@@ -11,7 +11,7 @@
         <div class="px-5 pb-6 pt-5 sm:px-6">
             <div class="mb-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
                 <p>Verificatiecode verzonden naar <strong><?= htmlspecialchars((string) $data['email']) ?></strong></p>
-                <p class="text-xs mt-1.5 opacity-90">De code is 10 minuten geldig</p>
+                <p class="text-xs mt-1.5 opacity-90">De code is 10 minuten geldig (let op: de code kan in je spam inbox staan)</p>
             </div>
 
             <?php if ($data['debug_mode'] && $data['debug_code']): ?>
