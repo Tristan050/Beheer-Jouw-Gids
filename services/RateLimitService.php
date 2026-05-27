@@ -2,12 +2,33 @@
 
 class RateLimitService
 {
+    private const DATETIME_FORMAT = 'Y-m-d H:i:s';
     private const MAX_ATTEMPTS = 5;
     private const WINDOW_MINUTES = 15;
     private const BLOCK_MINUTES = 30;
 
     public function __construct(private readonly RateLimitRepository $repository = new RateLimitRepository())
     {
+    }
+
+    private function now(): DateTimeImmutable
+    {
+        return new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    }
+
+    private function formatDateTime(DateTimeInterface $dateTime): string
+    {
+        return $dateTime->setTimezone(new DateTimeZone('UTC'))->format(self::DATETIME_FORMAT);
+    }
+
+    private function parseDateTime(?string $dateTime): ?DateTimeImmutable
+    {
+        if ($dateTime === null || $dateTime === '') {
+            return null;
+        }
+
+        $parsedDateTime = DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $dateTime, new DateTimeZone('UTC'));
+        return $parsedDateTime ?: null;
     }
     /**
      * Checks if the given key is currently blocked for the specified scope.
@@ -20,15 +41,13 @@ class RateLimitService
     public function isBlocked(string $key, string $scope = 'admin_login'): bool
     {
         $blockedUntil = $this->repository->findBlockedUntil($key, $scope);
+        $blockedUntilTime = $this->parseDateTime($blockedUntil);
 
-        if ($blockedUntil === null) {
+        if ($blockedUntilTime === null) {
             return false;
         }
 
-        $now = new DateTime();
-        $blockTime = DateTime::createFromFormat('Y-m-d H:i:s', $blockedUntil);
-
-        return $now < $blockTime;
+        return $this->now() < $blockedUntilTime;
     }
 
     /**
@@ -39,28 +58,39 @@ class RateLimitService
      * @param bool $isSuccess Whether the login attempt was successful
      * @return bool True if the attempt was recorded successfully, false otherwise
      */
-    public function recordAttempt(string $key, string $scope = 'admin_login', bool $isSuccess = false): bool
+    public function recordAttempt(
+        string $key,
+        string $scope = 'admin_login',
+        bool $isSuccess = false,
+        ?int $maxAttempts = null,
+        ?int $windowMinutes = null,
+        ?int $blockMinutes = null
+    ): bool
     {
-        $now = new DateTime();
-        $windowStart = (clone $now)->sub(new DateInterval('PT' . self::WINDOW_MINUTES . 'M'));
+        $maxAttempts ??= self::MAX_ATTEMPTS;
+        $windowMinutes ??= self::WINDOW_MINUTES;
+        $blockMinutes ??= self::BLOCK_MINUTES;
 
-        $this->repository->deleteOldAttempts($key, $scope, $windowStart->format('Y-m-d H:i:s'));
+        $now = $this->now();
+        $windowStart = $now->modify('-' . $windowMinutes . ' minutes');
+
+        $this->repository->deleteOldAttempts($key, $scope, $this->formatDateTime($windowStart));
 
         if ($isSuccess) {
             $this->repository->deleteAllAttempts($key, $scope);
             return true;
         }
 
-        $attemptCount = $this->repository->countAttempts($key, $scope, $windowStart->format('Y-m-d H:i:s'));
+        $attemptCount = $this->repository->countAttempts($key, $scope, $this->formatDateTime($windowStart));
 
         $blockedUntil = null;
-        if ($attemptCount >= self::MAX_ATTEMPTS) {
-            $blockedUntil = (clone $now)->add(new DateInterval('PT' . self::BLOCK_MINUTES . 'M'))->format('Y-m-d H:i:s');
+        if ($attemptCount >= $maxAttempts) {
+            $blockedUntil = $this->formatDateTime($now->modify('+' . $blockMinutes . ' minutes'));
         }
 
-        $this->repository->createAttempt($key, $scope, $now->format('Y-m-d H:i:s'), $blockedUntil);
+        $this->repository->createAttempt($key, $scope, $this->formatDateTime($now), $blockedUntil);
 
-        return $attemptCount < self::MAX_ATTEMPTS;
+        return $attemptCount < $maxAttempts;
     }
 
     /**
@@ -76,10 +106,9 @@ class RateLimitService
             return 0;
         }
 
-        $now = new DateTime();
-        $windowStart = (clone $now)->sub(new DateInterval('PT' . self::WINDOW_MINUTES . 'M'));
+        $windowStart = $this->now()->modify('-' . self::WINDOW_MINUTES . ' minutes');
 
-        $attemptCount = $this->repository->countAttempts($key, $scope, $windowStart->format('Y-m-d H:i:s'));
+        $attemptCount = $this->repository->countAttempts($key, $scope, $this->formatDateTime($windowStart));
 
         $remaining = max(0, self::MAX_ATTEMPTS - $attemptCount);
         return $remaining;
@@ -102,9 +131,12 @@ class RateLimitService
             return 0;
         }
 
-        $now = new DateTime();
-        $blockTime = DateTime::createFromFormat('Y-m-d H:i:s', $blockedUntil);
-        $diff = $blockTime->diff($now);
+        $blockTime = $this->parseDateTime($blockedUntil);
+        if ($blockTime === null) {
+            return 0;
+        }
+
+        $diff = $blockTime->diff($this->now());
 
         return (int) ($diff->days * 24 * 60 + $diff->h * 60 + $diff->i) + 1;
     }

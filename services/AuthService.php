@@ -1,7 +1,9 @@
 <?php
 
-class AuthService
+class AuthService extends BaseService
 {
+    private const LOGIN_RATE_LIMIT_SCOPE = 'login_attempt';
+
     public function __construct(
         private readonly UserRepository $userRepository = new UserRepository(),
         private readonly RateLimitService $rateLimitService = new RateLimitService()
@@ -10,42 +12,36 @@ class AuthService
 
     public function attemptLogin(string $email, string $password): mixed
     {
-        $rateLimitKey = hash('sha256', strtolower(trim($email)));
+        $rateLimitKey = $this->getLoginRateLimitKey($email);
 
-        if ($this->rateLimitService->isBlocked($rateLimitKey)) {
-            $minutesRemaining = $this->rateLimitService->getBlockedMinutesRemaining($rateLimitKey);
-            return [
-                'success' => false,
-                'message' => "Te veel inlogpogingen. Probeer over $minutesRemaining minuten opnieuw.",
+        if ($this->rateLimitService->isBlocked($rateLimitKey, self::LOGIN_RATE_LIMIT_SCOPE)) {
+            $minutesRemaining = $this->rateLimitService->getBlockedMinutesRemaining($rateLimitKey, self::LOGIN_RATE_LIMIT_SCOPE);
+            return $this->response(false, "Te veel inlogpogingen. Probeer over $minutesRemaining minuten opnieuw.", [
                 'remaining_attempts' => 0,
                 'blocked_minutes' => $minutesRemaining,
-            ];
+            ]);
         }
 
         $user = $this->userRepository->findActiveUserByEmail($email);
 
         if ($user === null) {
-            $this->rateLimitService->recordAttempt($rateLimitKey, 'admin_login', false);
-            $remainingAttempts = $this->rateLimitService->getRemainingAttempts($rateLimitKey);
+            $this->rateLimitService->recordAttempt($rateLimitKey, self::LOGIN_RATE_LIMIT_SCOPE, false);
+            $remainingAttempts = $this->rateLimitService->getRemainingAttempts($rateLimitKey, self::LOGIN_RATE_LIMIT_SCOPE);
 
-            return [
-                'success' => false,
-                'message' => 'Email of wachtwoord onjuist.',
+            return $this->response(false, 'Email of wachtwoord onjuist.', [
                 'remaining_attempts' => $remainingAttempts,
-            ];
+            ]);
         }
 
         $passwordHash = (string) ($user['password'] ?? '');
 
         if ($passwordHash === '' || !password_verify($password, $passwordHash)) {
-            $this->rateLimitService->recordAttempt($rateLimitKey, 'admin_login', false);
-            $remainingAttempts = $this->rateLimitService->getRemainingAttempts($rateLimitKey);
+            $this->rateLimitService->recordAttempt($rateLimitKey, self::LOGIN_RATE_LIMIT_SCOPE, false);
+            $remainingAttempts = $this->rateLimitService->getRemainingAttempts($rateLimitKey, self::LOGIN_RATE_LIMIT_SCOPE);
 
-            return [
-                'success' => false,
-                'message' => 'Email of wachtwoord onjuist.',
+            return $this->response(false, 'Email of wachtwoord onjuist.', [
                 'remaining_attempts' => $remainingAttempts,
-            ];
+            ]);
         }
 
         if (password_needs_rehash($passwordHash, PASSWORD_DEFAULT)) {
@@ -54,20 +50,30 @@ class AuthService
 
         $userRoles = $user['roles'] ?? [];
         if (!array_intersect($userRoles, ['super_admin', 'admin'])) {
-            $this->rateLimitService->clearAttempts($rateLimitKey);
-            return [
-                'success' => false,
-                'message' => 'Je hebt geen toegang tot dit admin-paneel.',
+            $this->rateLimitService->clearAttempts($rateLimitKey, self::LOGIN_RATE_LIMIT_SCOPE);
+            return $this->response(false, 'Je hebt geen toegang tot dit admin-paneel.', [
                 'remaining_attempts' => 0,
-            ];
+            ]);
         }
 
-        $this->rateLimitService->clearAttempts($rateLimitKey);
+        $this->rateLimitService->clearAttempts($rateLimitKey, self::LOGIN_RATE_LIMIT_SCOPE);
 
-        return [
-            'success' => true,
+        return $this->response(true, null, [
             'user' => $user,
-        ];
+        ]);
+    }
+
+    private function getLoginRateLimitKey(string $email): string
+    {
+        $normalizedEmail = strtolower(trim($email));
+        $clientIp = $this->getClientIp();
+
+        return hash('sha256', $normalizedEmail . '|' . $clientIp);
+    }
+
+    private function getClientIp(): string
+    {
+        return (string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
     }
 
     public function getAuthenticatedUser(): ?array
