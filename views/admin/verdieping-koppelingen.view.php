@@ -77,9 +77,7 @@ $sidebar = [
                         <table class="min-w-full divide-y divide-slate-200" id="koppelingTable">
                             <thead class="bg-slate-100 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                                 <tr>
-                                    <th class="px-4 py-3">VerdiepingsvraagID</th>
                                     <th class="px-4 py-3">Vraag</th>
-                                    <th class="px-4 py-3">OrganisatieID</th>
                                     <th class="px-4 py-3">Organisatie</th>
                                     <th class="px-4 py-3">Acties</th>
                                 </tr>
@@ -88,9 +86,7 @@ $sidebar = [
                                 <?php if (!empty($data['items'])): ?>
                                     <?php foreach ($data['items'] as $row): ?>
                                         <tr>
-                                            <td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['verdiepingsvraag_id'] ?? 0) ?></td>
                                             <td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['vraag'] ?? '')) ?></td>
-                                            <td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['organisatie_id'] ?? 0) ?></td>
                                             <td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['organisatie_name'] ?? '')) ?></td>
                                             <td class="px-4 py-3">
                                                 <form method="post" action="<?= htmlspecialchars(appUrl('verdieping-koppeling-delete')) ?>" onsubmit="return confirm('Weet je zeker dat je deze koppeling wilt verwijderen?');">
@@ -104,7 +100,7 @@ $sidebar = [
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">Nog geen koppelingen gevonden.</td>
+                                        <td colspan="3" class="px-4 py-6 text-center text-sm text-slate-500">Nog geen koppelingen gevonden.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
