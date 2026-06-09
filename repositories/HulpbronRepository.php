@@ -9,7 +9,7 @@ class HulpbronRepository extends BaseRepository
 
     protected function idColumn(): string
     {
-        return 'HulpbronID';
+        return 'hulpbron_id';
     }
 
     public function getAll(): array
@@ -25,7 +25,7 @@ class HulpbronRepository extends BaseRepository
     public function create(string $name, ?string $description): int
     {
         return (int) execSQL(
-            'INSERT INTO gids_hulpbron (Hulpbron, Toelichting) VALUES (?, ?)',
+            'INSERT INTO gids_hulpbron (hulpbron, toelichting) VALUES (?, ?)',
             ['ss', $name, $description],
             true
         );
@@ -34,7 +34,7 @@ class HulpbronRepository extends BaseRepository
     public function update(int $id, string $name, ?string $description): int
     {
         return (int) execSQL(
-            'UPDATE gids_hulpbron SET Hulpbron = ?, Toelichting = ? WHERE HulpbronID = ?',
+            'UPDATE gids_hulpbron SET hulpbron = ?, toelichting = ? WHERE hulpbron_id = ?',
             ['ssi', $name, $description, $id],
             true
         );
@@ -51,7 +51,7 @@ class HulpbronRepository extends BaseRepository
     public function getLeefgebiedenForHulpbron(int $hulpbronId): array
     {
         $result = execSQL(
-            'SELECT LeefgebiedID, Sort_order FROM gids_leefgebied_hulpbron WHERE HulpbronID = ? ORDER BY Sort_order',
+            'SELECT leefgebied_id, sort_order FROM gids_leefgebied_hulpbron WHERE hulpbron_id = ? ORDER BY sort_order',
             ['i', $hulpbronId],
             false
         );
@@ -60,8 +60,8 @@ class HulpbronRepository extends BaseRepository
         if ($result) {
             while ($row = $result->fetch_assoc()) {
                 $leefgebieden[] = [
-                    'LeefgebiedID' => (int) ($row['LeefgebiedID'] ?? 0),
-                    'Sort_order' => (int) ($row['Sort_order'] ?? 0),
+                    'leefgebied_id' => (int) ($row['leefgebied_id'] ?? 0),
+                    'sort_order' => (int) ($row['sort_order'] ?? 0),
                 ];
             }
         }
@@ -76,7 +76,7 @@ class HulpbronRepository extends BaseRepository
     {
         // Remove existing assignments for this hulpbron
         execSQL(
-            'DELETE FROM gids_leefgebied_hulpbron WHERE HulpbronID = ?',
+            'DELETE FROM gids_leefgebied_hulpbron WHERE hulpbron_id = ?',
             ['i', $hulpbronId],
             true
         );
@@ -84,7 +84,7 @@ class HulpbronRepository extends BaseRepository
         // Add new assignments
         foreach ($leefgebiedIds as $index => $leefgebiedId) {
             execSQL(
-                'INSERT INTO gids_leefgebied_hulpbron (LeefgebiedID, HulpbronID, Sort_order) VALUES (?, ?, ?)',
+                'INSERT INTO gids_leefgebied_hulpbron (leefgebied_id, hulpbron_id, sort_order) VALUES (?, ?, ?)',
                 ['iii', (int) $leefgebiedId, $hulpbronId, $index + 1],
                 true
             );
@@ -94,9 +94,9 @@ class HulpbronRepository extends BaseRepository
     protected function mapRow(array $row): HulpbronDTO
     {
         return new HulpbronDTO(
-            (int) ($row['HulpbronID'] ?? 0),
-            (string) ($row['Hulpbron'] ?? ''),
-            (string) ($row['Toelichting'] ?? '') ?: null
+            (int) ($row['hulpbron_id'] ?? 0),
+            (string) ($row['hulpbron'] ?? ''),
+            (string) ($row['toelichting'] ?? '') ?: null
         );
     }
 }

@@ -10,8 +10,8 @@ abstract class BaseRepository
 
     protected function orderBy(): string
     {
-        if ($this->hasColumn('Sort_order')) {
-            return 'Sort_order ASC';
+        if ($this->hasColumn('sort_order')) {
+            return 'sort_order ASC';
         }
 
         return $this->idColumn() . ' ASC';

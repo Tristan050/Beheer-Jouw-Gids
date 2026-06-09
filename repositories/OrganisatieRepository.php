@@ -9,7 +9,7 @@ class OrganisatieRepository extends BaseRepository
 
     protected function idColumn(): string
     {
-        return 'OrganisatieID';
+        return 'organisatie_id';
     }
 
     public function getAll(): array
@@ -25,7 +25,7 @@ class OrganisatieRepository extends BaseRepository
     public function create(string $name, string $address, string $phone, string $email, string $website): int
     {
         return (int) execSQL(
-            'INSERT INTO gids_organisatie (Naam, Adres, Telefoon, Email, Website) VALUES (?, ?, ?, ?, ?)',
+            'INSERT INTO gids_organisatie (naam, adres, telefoon, email, website) VALUES (?, ?, ?, ?, ?)',
             ['sssss', $name, $address, $phone, $email, $website],
             true
         );
@@ -34,7 +34,7 @@ class OrganisatieRepository extends BaseRepository
     public function update(int $id, string $name, string $address, string $phone, string $email, string $website): int
     {
         return (int) execSQL(
-            'UPDATE gids_organisatie SET Naam = ?, Adres = ?, Telefoon = ?, Email = ?, Website = ? WHERE OrganisatieID = ?',
+            'UPDATE gids_organisatie SET naam = ?, adres = ?, telefoon = ?, email = ?, website = ? WHERE organisatie_id = ?',
             ['sssssi', $name, $address, $phone, $email, $website, $id],
             true
         );
@@ -43,7 +43,7 @@ class OrganisatieRepository extends BaseRepository
     public function delete(int $id): int
     {
         execSQL(
-            'DELETE FROM gids_verdieping_koppeltabel WHERE OrganisatieID = ?',
+            'DELETE FROM gids_verdieping_koppeltabel WHERE organisatie_id = ?',
             ['i', $id],
             true
         );
@@ -54,12 +54,12 @@ class OrganisatieRepository extends BaseRepository
     protected function mapRow(array $row): OrganisatieDTO
     {
         return new OrganisatieDTO(
-            (int) ($row['OrganisatieID'] ?? 0),
-            (string) ($row['Naam'] ?? ''),
-            (string) ($row['Adres'] ?? ''),
-            (string) ($row['Telefoon'] ?? ''),
-            (string) ($row['Email'] ?? ''),
-            (string) ($row['Website'] ?? '')
+            (int) ($row['organisatie_id'] ?? 0),
+            (string) ($row['naam'] ?? ''),
+            (string) ($row['adres'] ?? ''),
+            (string) ($row['telefoon'] ?? ''),
+            (string) ($row['email'] ?? ''),
+            (string) ($row['website'] ?? '')
         );
     }
 }

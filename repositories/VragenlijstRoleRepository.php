@@ -14,7 +14,7 @@ class VragenlijstRoleRepository extends BaseRepository
 
     protected function orderBy(): string
     {
-        return 'Name ASC';
+        return 'name ASC';
     }
 
     public function getAll(): array
@@ -31,7 +31,7 @@ class VragenlijstRoleRepository extends BaseRepository
     {
         return new VragenlijstRoleDTO(
             (int) ($row['id'] ?? 0),
-            (string) ($row['Name'] ?? ($row['name'] ?? ''))
+            (string) ($row['name'] ?? ($row['name'] ?? ''))
         );
     }
 }

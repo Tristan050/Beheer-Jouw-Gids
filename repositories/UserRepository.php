@@ -6,7 +6,7 @@ class UserRepository
     {
         $normalizedEmail = strtolower(trim($email));
         $result = execSQL(
-            'SELECT UserID, First_name, Last_name, Email, Password, is_admin, is_verified FROM gids_users WHERE LOWER(Email) = ? LIMIT 1',
+            'SELECT user_id, first_name, last_name, email, password, is_admin, is_verified FROM gids_users WHERE LOWER(email) = ? LIMIT 1',
             ['s', $normalizedEmail],
             false
         );
@@ -16,15 +16,15 @@ class UserRepository
         }
 
         $row = $result->fetch_assoc();
-        $userId = (int) ($row['UserID'] ?? 0);
+        $userId = (int) ($row['user_id'] ?? 0);
         $roles = $this->getUserRoles($userId);
 
         return [
             'id' => $userId,
-            'first_name' => (string) ($row['First_name'] ?? ''),
-            'last_name' => (string) ($row['Last_name'] ?? ''),
-            'email' => (string) ($row['Email'] ?? ''),
-            'password' => (string) ($row['Password'] ?? ''),
+            'first_name' => (string) ($row['first_name'] ?? ''),
+            'last_name' => (string) ($row['last_name'] ?? ''),
+            'email' => (string) ($row['email'] ?? ''),
+            'password' => (string) ($row['password'] ?? ''),
             'is_admin' => (int) ($row['is_admin'] ?? 0),
             'is_verified' => (int) ($row['is_verified'] ?? 0),
             'roles' => $roles,
@@ -34,7 +34,7 @@ class UserRepository
     public function getUserById(int $userId): ?array
     {
         $result = execSQL(
-            'SELECT UserID, First_name, Last_name, Email, is_admin, is_verified FROM gids_users WHERE UserID = ? LIMIT 1',
+            'SELECT user_id, first_name, last_name, email, is_admin, is_verified FROM gids_users WHERE user_id = ? LIMIT 1',
             ['i', $userId],
             false
         );
@@ -47,10 +47,10 @@ class UserRepository
         $roles = $this->getUserRoles($userId);
 
         return [
-            'id' => (int) ($row['UserID'] ?? 0),
-            'first_name' => (string) ($row['First_name'] ?? ''),
-            'last_name' => (string) ($row['Last_name'] ?? ''),
-            'email' => (string) ($row['Email'] ?? ''),
+            'id' => (int) ($row['user_id'] ?? 0),
+            'first_name' => (string) ($row['first_name'] ?? ''),
+            'last_name' => (string) ($row['last_name'] ?? ''),
+            'email' => (string) ($row['email'] ?? ''),
             'is_admin' => (int) ($row['is_admin'] ?? 0),
             'is_verified' => (int) ($row['is_verified'] ?? 0),
             'roles' => $roles,
@@ -82,7 +82,7 @@ class UserRepository
     public function updatePassword(int $userId, string $passwordHash): void
     {
         execSQL(
-            'UPDATE gids_users SET Password = ? WHERE UserID = ?',
+            'UPDATE gids_users SET password = ? WHERE user_id = ?',
             ['si', $passwordHash, $userId],
             true
         );

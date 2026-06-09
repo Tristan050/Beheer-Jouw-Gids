@@ -9,7 +9,7 @@ class FunctieRepository extends BaseRepository
 
     protected function idColumn(): string
     {
-        return 'FunctieID';
+        return 'functie_id';
     }
 
     public function getAll(): array
@@ -25,7 +25,7 @@ class FunctieRepository extends BaseRepository
     public function create(int $leefgebiedId, string $name, string $description, int $sortOrder): int
     {
         return (int) execSQL(
-            'INSERT INTO gids_functie (LeefgebiedID, Naam_functie, Beschrijving_functie, Sort_order) VALUES (?, ?, ?, ?)',
+            'INSERT INTO gids_functie (leefgebied_id, naam_functie, beschrijving_functie, sort_order) VALUES (?, ?, ?, ?)',
             ['issi', $leefgebiedId, $name, $description, $sortOrder],
             true
         );
@@ -34,7 +34,7 @@ class FunctieRepository extends BaseRepository
     public function update(int $id, int $leefgebiedId, string $name, string $description, int $sortOrder): int
     {
         return (int) execSQL(
-            'UPDATE gids_functie SET LeefgebiedID = ?, Naam_functie = ?, Beschrijving_functie = ?, Sort_order = ? WHERE FunctieID = ?',
+            'UPDATE gids_functie SET leefgebied_id = ?, naam_functie = ?, beschrijving_functie = ?, sort_order = ? WHERE functie_id = ?',
             ['issii', $leefgebiedId, $name, $description, $sortOrder, $id],
             true
         );
@@ -48,11 +48,11 @@ class FunctieRepository extends BaseRepository
     protected function mapRow(array $row): FunctieDTO
     {
         return new FunctieDTO(
-            (int) ($row['FunctieID'] ?? 0),
-            (int) ($row['LeefgebiedID'] ?? 0),
-            (string) ($row['Naam_functie'] ?? ''),
-            (string) ($row['Beschrijving_functie'] ?? ''),
-            (int) ($row['Sort_order'] ?? 0)
+            (int) ($row['functie_id'] ?? 0),
+            (int) ($row['leefgebied_id'] ?? 0),
+            (string) ($row['naam_functie'] ?? ''),
+            (string) ($row['beschrijving_functie'] ?? ''),
+            (int) ($row['sort_order'] ?? 0)
         );
     }
 }
