@@ -4,7 +4,9 @@ class VerdiepingsvraagService extends BaseService
 {
     public function __construct(
         private readonly VerdiepingsvraagRepository $repository = new VerdiepingsvraagRepository(),
-        private readonly AandachtspuntRepository $aandachtspuntRepository = new AandachtspuntRepository()
+        private readonly AandachtspuntRepository $aandachtspuntRepository = new AandachtspuntRepository(),
+        private readonly FunctieRepository $functieRepository = new FunctieRepository(),
+        private readonly LeefgebiedRepository $leefgebiedRepository = new LeefgebiedRepository()
     ) {
     }
 
@@ -23,25 +25,44 @@ class VerdiepingsvraagService extends BaseService
     public function getIndexItems(): array
     {
         $items = $this->repository->getAll();
-        $aandachtspunten = $this->getAandachtspuntOptions();
         $aandachtspuntNameById = [];
+        $aandachtspuntFunctieIdById = [];
+        $functieNameById = [];
+        $functieLeefgebiedIdById = [];
+        $leefgebiedNameById = [];
 
-        foreach ($aandachtspunten as $aandachtspunt) {
-            $aandachtspuntNameById[(int) ($aandachtspunt['id'] ?? 0)] = (string) ($aandachtspunt['name'] ?? '');
+        foreach ($this->aandachtspuntRepository->getAll() as $aandachtspunt) {
+            $aandachtspuntNameById[$aandachtspunt->id] = $aandachtspunt->aandachtspunt;
+            $aandachtspuntFunctieIdById[$aandachtspunt->id] = $aandachtspunt->functieId;
         }
 
-        return array_map(function (VerdiepingsvraagDTO $item) use ($aandachtspuntNameById): array {
+        foreach ($this->functieRepository->getAll() as $functie) {
+            $functieNameById[$functie->id] = $functie->name;
+            $functieLeefgebiedIdById[$functie->id] = $functie->leefgebiedId;
+        }
+
+        foreach ($this->leefgebiedRepository->getAll() as $leefgebied) {
+            $leefgebiedNameById[$leefgebied->id] = $leefgebied->name;
+        }
+
+        return array_map(function (VerdiepingsvraagDTO $item) use ($aandachtspuntNameById, $aandachtspuntFunctieIdById, $functieNameById, $functieLeefgebiedIdById, $leefgebiedNameById): array {
             $id = $item->id;
             $aandachtspuntId = $item->aandachtspuntId;
             $vraag = $item->vraag;
             $aandachtspuntName = (string) ($aandachtspuntNameById[$aandachtspuntId] ?? 'Onbekend');
+            $functieId = (int) ($aandachtspuntFunctieIdById[$aandachtspuntId] ?? 0);
+            $functieName = (string) ($functieNameById[$functieId] ?? 'Onbekend');
+            $leefgebiedId = (int) ($functieLeefgebiedIdById[$functieId] ?? 0);
+            $leefgebiedName = (string) ($leefgebiedNameById[$leefgebiedId] ?? 'Onbekend');
 
             return [
                 'id' => $id,
                 'aandachtspunt_id' => $aandachtspuntId,
+                'functie_name' => $functieName,
+                'leefgebied_name' => $leefgebiedName,
                 'aandachtspunt_name' => $aandachtspuntName,
                 'vraag' => $vraag,
-                'search' => strtolower(trim($id . ' ' . $vraag . ' ' . $aandachtspuntName . ' ' . $aandachtspuntId)),
+                'search' => strtolower(trim($id . ' ' . $vraag . ' ' . $aandachtspuntName . ' ' . $functieName . ' ' . $leefgebiedName . ' ' . $aandachtspuntId . ' ' . $functieId . ' ' . $leefgebiedId)),
                 'edit_url' => appUrl('verdieping-vraag-edit') . '?id=' . $id,
             ];
         }, $items);

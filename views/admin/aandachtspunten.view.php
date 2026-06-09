@@ -34,7 +34,7 @@ $sidebar = [
 					<div class="flex flex-wrap items-start justify-between gap-4">
 						<div>
 							<h2 class="text-lg font-semibold">Overzicht gids_aandachtspunt</h2>
-							<p class="mt-1 text-sm text-slate-600">Veldkoppeling: <strong>AandachtspuntID</strong>, <strong>FunctieID</strong>, <strong>Sort_order</strong>, <strong>Aandachtspunt</strong>, <strong>Toelichting</strong>, <strong>Scan_tekst</strong>, <strong>Advies_tekst</strong>.</p>
+							<p class="mt-1 text-sm text-slate-600">Veldkoppeling: <strong>Leefgebied</strong>, <strong>Functie</strong>, <strong>Sort_order</strong>, <strong>Aandachtspunt</strong>, <strong>Toelichting</strong>, <strong>Scan_tekst</strong>, <strong>Advies_tekst</strong>.</p>
 						</div>
 						<a href="<?= htmlspecialchars(appUrl('aandachtspunt-edit')) ?>" class="inline-flex items-center gap-2 rounded-lg bg-[#A53714] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8f2f11] focus:outline-none focus:ring-2 focus:ring-[#A53714]/30">
 							<i class="fas fa-plus" aria-hidden="true"></i>
@@ -44,7 +44,7 @@ $sidebar = [
 
 					<div class="mt-4 flex flex-wrap items-center gap-3">
 						<div class="relative min-w-[220px] flex-1">
-							<input id="aandachtspuntSearchInput" type="text" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 pr-9 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" placeholder="Zoek op aandachtspunt, scan of advies..." />
+							<input id="aandachtspuntSearchInput" type="text" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 pr-9 text-sm shadow-sm focus:border-[#A53714] focus:outline-none focus:ring-2 focus:ring-[#A53714]/20" placeholder="Zoek op leefgebied, aandachtspunt, scan of advies..." />
 							<span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">&#128269;</span>
 						</div>
 						<button type="button" class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50" onclick="document.getElementById('aandachtspuntSearchInput').value=''; filterAandachtspunten();">Wissen</button>
@@ -54,7 +54,7 @@ $sidebar = [
 						<table class="min-w-full divide-y divide-slate-200" id="aandachtspuntTable" data-source-table="gids_aandachtspunt">
 							<thead class="bg-slate-100 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
 								<tr>
-									<th class="px-4 py-3">AandachtspuntID</th>
+									<th class="px-4 py-3">Leefgebied</th>
 									<th class="px-4 py-3">Functie</th>
 									<th class="px-4 py-3">Aandachtspunt</th>
 									<th class="px-4 py-3">Sort_order</th>
@@ -67,7 +67,7 @@ $sidebar = [
 								<?php if (!empty($data['items'])): ?>
 									<?php foreach ($data['items'] as $row): ?>
 										<tr data-search="<?= htmlspecialchars((string) ($row['search'] ?? '')) ?>">
-											<td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['id'] ?? 0) ?></td>
+											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['leefgebied_name'] ?? '')) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['functie_name'] ?? '')) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['aandachtspunt'] ?? '')) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['sort_order'] ?? 0) ?></td>

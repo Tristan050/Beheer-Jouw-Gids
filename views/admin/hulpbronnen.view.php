@@ -54,7 +54,6 @@ $sidebar = [
 						<table class="min-w-full divide-y divide-slate-200" id="hulpbronTable" data-source-table="gids_hulpbron">
 							<thead class="bg-slate-100 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
 								<tr>
-									<th class="px-4 py-3">HulpbronID</th>
 									<th class="px-4 py-3">Hulpbron</th>
 									<th class="px-4 py-3">Toelichting</th>
 									<th class="px-4 py-3">Acties</th>
@@ -64,7 +63,6 @@ $sidebar = [
 								<?php if (!empty($data['items'])): ?>
 									<?php foreach ($data['items'] as $row): ?>
 										<tr data-search="<?= htmlspecialchars((string) ($row['search'] ?? '')) ?>">
-											<td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['id'] ?? 0) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['name'] ?? '')) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['description'] ?? '')) ?></td>
 											<td class="px-4 py-3">
@@ -81,7 +79,7 @@ $sidebar = [
 									<?php endforeach; ?>
 								<?php else: ?>
 									<tr>
-										<td colspan="4" class="px-4 py-6 text-center text-sm text-slate-500">Nog geen hulpbronnen gevonden.</td>
+										<td colspan="3" class="px-4 py-6 text-center text-sm text-slate-500">Nog geen hulpbronnen gevonden.</td>
 									</tr>
 								<?php endif; ?>
 							</tbody>

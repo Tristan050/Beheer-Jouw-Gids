@@ -86,20 +86,32 @@ return [
             'controller' => 'VerdiepingsvragenController',
             'method' => 'delete',
         ],
-        'organisaties' => [
-            'controller' => 'OrganisatiesController',
+        'links' => [
+            'controller' => 'LinksController',
             'method' => 'index',
         ],
-        'organisatie-edit' => [
-            'controller' => 'OrganisatiesController',
+        'link-edit' => [
+            'controller' => 'LinksController',
             'method' => 'edit',
         ],
-        'organisatie-save' => [
-            'controller' => 'OrganisatiesController',
+        'link-save' => [
+            'controller' => 'LinksController',
             'method' => 'save',
         ],
-        'organisatie-delete' => [
-            'controller' => 'OrganisatiesController',
+        'link-delete' => [
+            'controller' => 'LinksController',
+            'method' => 'delete',
+        ],
+        'link-aandachtspunt-koppelingen' => [
+            'controller' => 'LinkAandachtspuntKoppelingenController',
+            'method' => 'index',
+        ],
+        'link-aandachtspunt-koppeling-save' => [
+            'controller' => 'LinkAandachtspuntKoppelingenController',
+            'method' => 'save',
+        ],
+        'link-aandachtspunt-koppeling-delete' => [
+            'controller' => 'LinkAandachtspuntKoppelingenController',
             'method' => 'delete',
         ],
         'hulpbronnen' => [
@@ -128,18 +140,6 @@ return [
         ],
         'leefgebied-hulpbron-koppeling-delete' => [
             'controller' => 'LeefgebiedHulpbronKoppelingenController',
-            'method' => 'delete',
-        ],
-        'verdieping-koppelingen' => [
-            'controller' => 'VerdiepingKoppelingenController',
-            'method' => 'index',
-        ],
-        'verdieping-koppeling-save' => [
-            'controller' => 'VerdiepingKoppelingenController',
-            'method' => 'save',
-        ],
-        'verdieping-koppeling-delete' => [
-            'controller' => 'VerdiepingKoppelingenController',
             'method' => 'delete',
         ],
         'vragenlijsten' => [

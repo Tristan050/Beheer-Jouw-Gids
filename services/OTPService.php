@@ -230,7 +230,7 @@ class OTPService extends BaseService
         $mail = new PHPMailer(true);
 
         try {
-            // Als je lokaal wil testen met bijv mail trap uncomment dan deze code en vul de .env variabelen in. In productie worden deze instellingen genegeerd.
+            // if you want to test locally with e.g. mail trap, uncomment this code and fill in the .env variables. In production, these settings are ignored.
             // $mail->CharSet = 'UTF-8';
             // $mail->Encoding = 'base64';
             // $mail->isSMTP();
@@ -244,10 +244,10 @@ class OTPService extends BaseService
             // $mail->addAddress($email);
 
             $mail->isHTML(true);
-            // Als je lokaal test comment deze code en uncomment de bovenstaande code.
+            // if you are testing locally comment this code and uncomment the code above.
             $mail->setFrom('noreply@jouwgids.nl', 'Beheer Jouw Gids');
             $mail->addAddress($email);
-            // tot hier
+            // until here
             $mail->Subject = 'Je verificatiecode is: ' . $code;
 
             $mail->Body = $this->getHTMLEmailBody($code);
@@ -266,7 +266,6 @@ class OTPService extends BaseService
                 'exception' => $e->getMessage(),
             ]);
 
-            $this->lastError = 'Kon verificatiecode niet versturen.';
             return false;
         }
     }

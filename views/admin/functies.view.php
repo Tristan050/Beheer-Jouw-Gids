@@ -54,8 +54,7 @@ $sidebar = [
 						<table class="min-w-full divide-y divide-slate-200" id="functieTable" data-source-table="gids_functie">
 							<thead class="bg-slate-100 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
 								<tr>
-									<th class="px-4 py-3">FunctieID</th>
-									<th class="px-4 py-3">LeefgebiedID</th>
+									<th class="px-4 py-3">Leefgebied</th>
 									<th class="px-4 py-3">Naam_functie</th>
 									<th class="px-4 py-3">Beschrijving_functie</th>
 									<th class="px-4 py-3">Sort_order</th>
@@ -66,8 +65,7 @@ $sidebar = [
 								<?php if (!empty($data['items'])): ?>
 									<?php foreach ($data['items'] as $row): ?>
 										<tr data-search="<?= htmlspecialchars((string) ($row['search'] ?? '')) ?>">
-											<td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['id'] ?? 0) ?></td>
-							<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['leefgebied'] ?? '')) ?></td>
+											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['leefgebied'] ?? '')) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['name'] ?? '')) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= htmlspecialchars((string) ($row['description'] ?? '')) ?></td>
 											<td class="px-4 py-3 text-sm text-slate-700"><?= (int) ($row['sort_order'] ?? 0) ?></td>
@@ -85,7 +83,7 @@ $sidebar = [
 									<?php endforeach; ?>
 								<?php else: ?>
 									<tr>
-										<td colspan="6" class="px-4 py-6 text-center text-sm text-slate-500">Nog geen functies gevonden.</td>
+										<td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">Nog geen functies gevonden.</td>
 									</tr>
 								<?php endif; ?>
 							</tbody>
