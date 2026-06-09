@@ -28,6 +28,18 @@ jobs:
       - name: Build frontend assets
         run: npm run build
 
+      - name: Maak deploy map
+        run: |
+          mkdir deploy
+          rsync -av ./ deploy/ \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='database/' \
+            --exclude='docker/' \
+            --exclude='node_modules/' \
+            --exclude='.env' \
+            --exclude='README.md'
+
       - name: Upload naar STAGING server
         uses: appleboy/scp-action@v1.0.0
         with:
@@ -35,5 +47,6 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 22
-          source: ./
+          source: deploy/
           target: public_addon/beheerstaging.jouw-gids.nl/
+          strip_components: 1
