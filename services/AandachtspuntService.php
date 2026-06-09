@@ -4,7 +4,8 @@ class AandachtspuntService extends BaseService
 {
     public function __construct(
         private readonly AandachtspuntRepository $repository = new AandachtspuntRepository(),
-        private readonly FunctieRepository $functieRepository = new FunctieRepository()
+        private readonly FunctieRepository $functieRepository = new FunctieRepository(),
+        private readonly LeefgebiedRepository $leefgebiedRepository = new LeefgebiedRepository()
     )
     {
     }
@@ -24,14 +25,20 @@ class AandachtspuntService extends BaseService
     public function getIndexItems(): array
     {
         $items = $this->repository->getAll();
-        $functies = $this->getFunctieOptions();
         $functieNameById = [];
+        $functieLeefgebiedIdById = [];
+        $leefgebiedNameById = [];
 
-        foreach ($functies as $functie) {
-            $functieNameById[(int) ($functie['id'] ?? 0)] = (string) ($functie['name'] ?? '');
+        foreach ($this->functieRepository->getAll() as $functie) {
+            $functieNameById[$functie->id] = $functie->name;
+            $functieLeefgebiedIdById[$functie->id] = $functie->leefgebiedId;
         }
 
-        return array_map(function (AandachtspuntDTO $item) use ($functieNameById): array {
+        foreach ($this->leefgebiedRepository->getAll() as $leefgebied) {
+            $leefgebiedNameById[$leefgebied->id] = $leefgebied->name;
+        }
+
+        return array_map(function (AandachtspuntDTO $item) use ($functieNameById, $functieLeefgebiedIdById, $leefgebiedNameById): array {
             $id = $item->id;
             $functieId = $item->functieId;
             $sortOrder = $item->sortOrder;
@@ -39,16 +46,19 @@ class AandachtspuntService extends BaseService
             $scanTekst = $item->scanTekst;
             $adviesTekst = $item->adviesTekst;
             $functieName = (string) ($functieNameById[$functieId] ?? 'Onbekend');
+            $leefgebiedId = (int) ($functieLeefgebiedIdById[$functieId] ?? 0);
+            $leefgebiedName = (string) ($leefgebiedNameById[$leefgebiedId] ?? 'Onbekend');
 
             return [
                 'id' => $id,
+                'leefgebied_name' => $leefgebiedName,
                 'functie_id' => $functieId,
                 'functie_name' => $functieName,
                 'sort_order' => $sortOrder,
                 'aandachtspunt' => $aandachtspunt,
                 'scan_tekst' => $scanTekst,
                 'advies_tekst' => $adviesTekst,
-                'search' => strtolower(trim($id . ' ' . $functieName . ' ' . $aandachtspunt . ' ' . $scanTekst . ' ' . $adviesTekst . ' ' . $sortOrder)),
+                'search' => strtolower(trim($id . ' ' . $leefgebiedName . ' ' . $functieName . ' ' . $aandachtspunt . ' ' . $scanTekst . ' ' . $adviesTekst . ' ' . $sortOrder)),
                 'edit_url' => appUrl('aandachtspunt-edit') . '?id=' . $id,
             ];
         }, $items);

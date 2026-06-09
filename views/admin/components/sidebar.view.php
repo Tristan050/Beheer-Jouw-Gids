@@ -1,4 +1,5 @@
 <?php
+$sidebar = $sidebar ?? [];
 $sidebar = is_array($sidebar ?? null) ? $sidebar : [];
 
 $variant = (string) ($sidebar['variant'] ?? 'module');
@@ -15,10 +16,10 @@ $functiesUrl = appUrl('functies');
 $aandachtspuntenUrl = appUrl('aandachtspunten');
 $verdiepingsvragenUrl = appUrl('verdiepingsvragen');
 $vragenlijstenUrl = appUrl('vragenlijsten');
-$organisatiesUrl = appUrl('organisaties');
 $hulpbronnenUrl = appUrl('hulpbronnen');
+$linksUrl = appUrl('links');
+$linkAandachtspuntKoppelingenUrl = appUrl('link-aandachtspunt-koppelingen');
 $leefgebiedHulpbronKoppelingenUrl = appUrl('leefgebied-hulpbron-koppelingen');
-$verdiepingKoppelingenUrl = appUrl('verdieping-koppelingen');
 
 $linkBase = 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition';
 $linkDark = $linkBase . ' text-white/90 hover:bg-white/10 hover:text-white';
@@ -101,12 +102,12 @@ if ($variant === 'dashboard'):
                     ['key' => 'leefgebieden', 'url' => $leefgebiedenUrl, 'label' => 'Leefgebieden'],
                     ['key' => 'functies', 'url' => $functiesUrl, 'label' => 'Functies'],
                     ['key' => 'aandachtspunten', 'url' => $aandachtspuntenUrl, 'label' => 'Aandachtspunten'],
+                    ['key' => 'links', 'url' => $linksUrl, 'label' => 'Links'],
+                    ['key' => 'link-aandachtspunt-koppelingen', 'url' => $linkAandachtspuntKoppelingenUrl, 'label' => 'Link koppelingen'],
                     ['key' => 'hulpbronnen', 'url' => $hulpbronnenUrl, 'label' => 'Hulpbronnen'],
                     ['key' => 'leefgebied-hulpbron-koppelingen', 'url' => $leefgebiedHulpbronKoppelingenUrl, 'label' => 'Hulpbron koppelingen'],
                     ['key' => 'verdiepingsvragen', 'url' => $verdiepingsvragenUrl, 'label' => 'Verdiepingsvragen'],
                     ['key' => 'vragenlijsten', 'url' => $vragenlijstenUrl, 'label' => 'Vragenlijsten'],
-                    ['key' => 'organisaties', 'url' => $organisatiesUrl, 'label' => 'Organisaties'],
-                    ['key' => 'verdieping-koppelingen', 'url' => $verdiepingKoppelingenUrl, 'label' => 'Verdieping koppelingen'],
                 ];
                 ?>
                 <?php foreach ($links as $link): ?>

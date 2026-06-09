@@ -9,8 +9,8 @@ $functiesUrl = appUrl('functies');
 $aandachtspuntenUrl = appUrl('aandachtspunten');
 $verdiepingsvragenUrl = appUrl('verdiepingsvragen');
 $vragenlijstenUrl = appUrl('vragenlijsten');
-$organisatiesUrl = appUrl('organisaties');
-$verdiepingKoppelingenUrl = appUrl('verdieping-koppelingen');
+$linksUrl = appUrl('links');
+$linkAandachtspuntKoppelingenUrl = appUrl('link-aandachtspunt-koppelingen');
 $logoutUrl = appUrl('logout');
 
 $sidebar = [
@@ -65,6 +65,14 @@ $sidebar = [
                             <i class="fas fa-list-alt" aria-hidden="true"></i>
                             <span>Aandachtspunten</span>
                         </a>
+                        <a href="<?= htmlspecialchars($linksUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
+                            <i class="fas fa-link" aria-hidden="true"></i>
+                            <span>Links</span>
+                        </a>
+                        <a href="<?= htmlspecialchars($linkAandachtspuntKoppelingenUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
+                            <i class="fas fa-link" aria-hidden="true"></i>
+                            <span>Link koppelingen</span>
+                        </a>
                         <a href="<?= htmlspecialchars($verdiepingsvragenUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
                             <i class="fas fa-chart-line" aria-hidden="true"></i>
                             <span>Verdiepingsvragen</span>
@@ -72,14 +80,6 @@ $sidebar = [
                         <a href="<?= htmlspecialchars($vragenlijstenUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
                             <i class="fas fa-list" aria-hidden="true"></i>
                             <span>Vragenlijsten</span>
-                        </a>
-                        <a href="<?= htmlspecialchars($organisatiesUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
-                            <i class="fas fa-building" aria-hidden="true"></i>
-                            <span>Organisaties</span>
-                        </a>
-                        <a href="<?= htmlspecialchars($verdiepingKoppelingenUrl) ?>" class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#A53714]/40 hover:text-[#A53714]">
-                            <i class="fas fa-link" aria-hidden="true"></i>
-                            <span>Verdieping koppelingen</span>
                         </a>
                     </div>
                 </section>
