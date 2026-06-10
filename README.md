@@ -1,3 +1,6 @@
+> [!NOTE]
+> Deze README is verouderd. Gebruik de README van de `feature/admin` branch.
+
 ### Jouw gids beheer
 
 Stap 1: Lokaal instellen: je hebt mysql nodig en apache dus het kan via xammp 
