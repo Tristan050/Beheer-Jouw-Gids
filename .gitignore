@@ -33,4 +33,3 @@ docker/mysql-init/
 db_data/
 
 # Extra
-/database

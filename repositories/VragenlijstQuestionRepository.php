@@ -14,7 +14,7 @@ class VragenlijstQuestionRepository extends BaseRepository
 
     protected function orderBy(): string
     {
-        return 'Roleid ASC, Sort_order ASC, id ASC';
+        return 'role_id ASC, sort_order ASC, id ASC';
     }
 
     public function getAll(): array
@@ -25,7 +25,7 @@ class VragenlijstQuestionRepository extends BaseRepository
     public function getByRoleId(int $roleId): array
     {
         $result = execSQL(
-            'SELECT * FROM gids_vragenlijst_question WHERE Roleid = ? ORDER BY Sort_order ASC, id ASC',
+            'SELECT * FROM gids_vragenlijst_question WHERE role_id = ? ORDER BY sort_order ASC, id ASC',
             ['i', $roleId],
             false
         );
@@ -51,14 +51,14 @@ class VragenlijstQuestionRepository extends BaseRepository
     {
         if ($defaultValue === null) {
             return (int) execSQL(
-                'INSERT INTO gids_vragenlijst_question (Roleid, Question_key, Label, Question_type_id, Default_value, Sort_order) VALUES (?, ?, ?, ?, NULL, ?)',
+                'INSERT INTO gids_vragenlijst_question (role_id, question_key, label, question_type_id, default_value, sort_order) VALUES (?, ?, ?, ?, NULL, ?)',
                 ['issii', $roleId, $questionKey, $label, $questionTypeId, $sortOrder],
                 true
             );
         }
 
         return (int) execSQL(
-            'INSERT INTO gids_vragenlijst_question (Roleid, Question_key, Label, Question_type_id, Default_value, Sort_order) VALUES (?, ?, ?, ?, ?, ?)',
+            'INSERT INTO gids_vragenlijst_question (role_id, question_key, label, question_type_id, default_value, sort_order) VALUES (?, ?, ?, ?, ?, ?)',
             ['issisi', $roleId, $questionKey, $label, $questionTypeId, $defaultValue, $sortOrder],
             true
         );
@@ -68,14 +68,14 @@ class VragenlijstQuestionRepository extends BaseRepository
     {
         if ($defaultValue === null) {
             return (int) execSQL(
-                'UPDATE gids_vragenlijst_question SET Roleid = ?, Question_key = ?, Label = ?, Question_type_id = ?, Default_value = NULL, Sort_order = ? WHERE id = ?',
+                'UPDATE gids_vragenlijst_question SET role_id = ?, question_key = ?, label = ?, question_type_id = ?, default_value = NULL, sort_order = ? WHERE id = ?',
                 ['issiii', $roleId, $questionKey, $label, $questionTypeId, $sortOrder, $id],
                 true
             );
         }
 
         return (int) execSQL(
-            'UPDATE gids_vragenlijst_question SET Roleid = ?, Question_key = ?, Label = ?, Question_type_id = ?, Default_value = ?, Sort_order = ? WHERE id = ?',
+            'UPDATE gids_vragenlijst_question SET role_id = ?, question_key = ?, label = ?, question_type_id = ?, default_value = ?, sort_order = ? WHERE id = ?',
             ['issisii', $roleId, $questionKey, $label, $questionTypeId, $defaultValue, $sortOrder, $id],
             true
         );
@@ -90,13 +90,13 @@ class VragenlijstQuestionRepository extends BaseRepository
     {
         if ($excludeId > 0) {
             $result = execSQL(
-                'SELECT id FROM gids_vragenlijst_question WHERE Roleid = ? AND Question_key = ? AND id <> ? LIMIT 1',
+                'SELECT id FROM gids_vragenlijst_question WHERE role_id = ? AND question_key = ? AND id <> ? LIMIT 1',
                 ['isi', $roleId, $questionKey, $excludeId],
                 false
             );
         } else {
             $result = execSQL(
-                'SELECT id FROM gids_vragenlijst_question WHERE Roleid = ? AND Question_key = ? LIMIT 1',
+                'SELECT id FROM gids_vragenlijst_question WHERE role_id = ? AND question_key = ? LIMIT 1',
                 ['is', $roleId, $questionKey],
                 false
             );
@@ -109,12 +109,12 @@ class VragenlijstQuestionRepository extends BaseRepository
     {
         return new VragenlijstQuestionDTO(
             (int) ($row['id'] ?? 0),
-            (int) ($row['Roleid'] ?? 0),
-            (string) ($row['Question_key'] ?? ''),
-            (string) ($row['Label'] ?? ''),
-            (int) ($row['Question_type_id'] ?? 0),
-            isset($row['Default_value']) ? (string) $row['Default_value'] : null,
-            (int) ($row['Sort_order'] ?? 0)
+            (int) ($row['role_id'] ?? 0),
+            (string) ($row['question_key'] ?? ''),
+            (string) ($row['label'] ?? ''),
+            (int) ($row['question_type_id'] ?? 0),
+            isset($row['default_value']) ? (string) $row['default_value'] : null,
+            (int) ($row['sort_order'] ?? 0)
         );
     }
 }

@@ -6,15 +6,15 @@ class LeefgebiedHulpbronKoppelingRepository
     {
         $result = execSQL(
             'SELECT 
-                lhb.LeefgebiedID, 
-                lhb.HulpbronID,
-                lg.Naam_leefgebied,
-                hb.Hulpbron,
-                lhb.Sort_order
+                lhb.leefgebied_id,
+                lhb.hulpbron_id,
+                lg.naam_leefgebied,
+                hb.hulpbron,
+                lhb.sort_order
             FROM gids_leefgebied_hulpbron lhb
-            JOIN gids_leefgebied lg ON lg.LeefgebiedID = lhb.LeefgebiedID
-            JOIN gids_hulpbron hb ON hb.HulpbronID = lhb.HulpbronID
-            ORDER BY lg.Naam_leefgebied, lhb.Sort_order',
+            JOIN gids_leefgebied lg ON lg.leefgebied_id = lhb.leefgebied_id
+            JOIN gids_hulpbron hb ON hb.hulpbron_id = lhb.hulpbron_id
+            ORDER BY lg.naam_leefgebied, lhb.sort_order',
             [],
             false
         );
@@ -23,11 +23,11 @@ class LeefgebiedHulpbronKoppelingRepository
         if ($result) {
             while ($row = $result->fetch_assoc()) {
                 $rows[] = [
-                    'leefgebied_id' => (int) ($row['LeefgebiedID'] ?? 0),
-                    'hulpbron_id' => (int) ($row['HulpbronID'] ?? 0),
-                    'leefgebied_name' => (string) ($row['Naam_leefgebied'] ?? ''),
-                    'hulpbron_name' => (string) ($row['Hulpbron'] ?? ''),
-                    'sort_order' => (int) ($row['Sort_order'] ?? 0),
+                    'leefgebied_id' => (int) ($row['leefgebied_id'] ?? 0),
+                    'hulpbron_id' => (int) ($row['hulpbron_id'] ?? 0),
+                    'leefgebied_name' => (string) ($row['naam_leefgebied'] ?? ''),
+                    'hulpbron_name' => (string) ($row['hulpbron'] ?? ''),
+                    'sort_order' => (int) ($row['sort_order'] ?? 0),
                 ];
             }
         }
@@ -38,7 +38,7 @@ class LeefgebiedHulpbronKoppelingRepository
     public function getHulpbronIdsForLeefgebied(int $leefgebiedId): array
     {
         $result = execSQL(
-            'SELECT HulpbronID FROM gids_leefgebied_hulpbron WHERE LeefgebiedID = ? ORDER BY Sort_order',
+            'SELECT hulpbron_id FROM gids_leefgebied_hulpbron WHERE leefgebied_id = ? ORDER BY sort_order',
             ['i', $leefgebiedId],
             false
         );
@@ -46,7 +46,7 @@ class LeefgebiedHulpbronKoppelingRepository
         $hulpbronIds = [];
         if ($result) {
             while ($row = $result->fetch_assoc()) {
-                $hulpbronIds[] = (int) ($row['HulpbronID'] ?? 0);
+                $hulpbronIds[] = (int) ($row['hulpbron_id'] ?? 0);
             }
         }
 
@@ -57,7 +57,7 @@ class LeefgebiedHulpbronKoppelingRepository
     {
         // Verwijder bestaande koppelingen
         execSQL(
-            'DELETE FROM gids_leefgebied_hulpbron WHERE LeefgebiedID = ?',
+            'DELETE FROM gids_leefgebied_hulpbron WHERE leefgebied_id = ?',
             ['i', $leefgebiedId],
             true
         );
@@ -65,7 +65,7 @@ class LeefgebiedHulpbronKoppelingRepository
         // Voeg nieuwe koppelingen toe
         foreach ($hulpbronIds as $index => $hulpbronId) {
             execSQL(
-                'INSERT INTO gids_leefgebied_hulpbron (LeefgebiedID, HulpbronID, Sort_order) VALUES (?, ?, ?)',
+                'INSERT INTO gids_leefgebied_hulpbron (leefgebied_id, hulpbron_id, sort_order) VALUES (?, ?, ?)',
                 ['iii', $leefgebiedId, (int) $hulpbronId, $index + 1],
                 true
             );
@@ -75,7 +75,7 @@ class LeefgebiedHulpbronKoppelingRepository
     public function deleteLink(int $leefgebiedId, int $hulpbronId): int
     {
         return (int) execSQL(
-            'DELETE FROM gids_leefgebied_hulpbron WHERE LeefgebiedID = ? AND HulpbronID = ?',
+            'DELETE FROM gids_leefgebied_hulpbron WHERE leefgebied_id = ? AND hulpbron_id = ?',
             ['ii', $leefgebiedId, $hulpbronId],
             true
         );

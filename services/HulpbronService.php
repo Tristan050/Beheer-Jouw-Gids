@@ -54,7 +54,7 @@ class HulpbronService extends BaseService
         $selectedLeefgebieden = [];
         if ($item !== null) {
             $assigned = $this->repository->getLeefgebiedenForHulpbron($item->id);
-            $selectedLeefgebieden = array_map(static fn($lg) => $lg['LeefgebiedID'], $assigned);
+            $selectedLeefgebieden = array_map(static fn($lg) => $lg['leefgebied_id'], $assigned);
         }
 
         return [

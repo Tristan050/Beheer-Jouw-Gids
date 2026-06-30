@@ -9,7 +9,7 @@ class AandachtspuntRepository extends BaseRepository
 
     protected function idColumn(): string
     {
-        return 'AandachtspuntID';
+        return 'aandachtspunt_id';
     }
 
     public function getAll(): array
@@ -25,7 +25,7 @@ class AandachtspuntRepository extends BaseRepository
     public function create(int $functieId, int $sortOrder, string $aandachtspunt, string $toelichting, string $scanTekst, string $adviesTekst): int
     {
         return (int) execSQL(
-            'INSERT INTO gids_aandachtspunt (FunctieID, Sort_order, Aandachtspunt, Toelichting, Scan_tekst, Advies_tekst) VALUES (?, ?, ?, ?, ?, ?)',
+            'INSERT INTO gids_aandachtspunt (functie_id, sort_order, aandachtspunt, toelichting, scan_tekst, advies_tekst) VALUES (?, ?, ?, ?, ?, ?)',
             ['iissss', $functieId, $sortOrder, $aandachtspunt, $toelichting, $scanTekst, $adviesTekst],
             true
         );
@@ -34,7 +34,7 @@ class AandachtspuntRepository extends BaseRepository
     public function update(int $id, int $functieId, int $sortOrder, string $aandachtspunt, string $toelichting, string $scanTekst, string $adviesTekst): int
     {
         return (int) execSQL(
-            'UPDATE gids_aandachtspunt SET FunctieID = ?, Sort_order = ?, Aandachtspunt = ?, Toelichting = ?, Scan_tekst = ?, Advies_tekst = ? WHERE AandachtspuntID = ?',
+            'UPDATE gids_aandachtspunt SET functie_id = ?, sort_order = ?, aandachtspunt = ?, toelichting = ?, scan_tekst = ?, advies_tekst = ? WHERE aandachtspunt_id = ?',
             ['iissssi', $functieId, $sortOrder, $aandachtspunt, $toelichting, $scanTekst, $adviesTekst, $id],
             true
         );
@@ -48,13 +48,13 @@ class AandachtspuntRepository extends BaseRepository
     protected function mapRow(array $row): AandachtspuntDTO
     {
         return new AandachtspuntDTO(
-            (int) ($row['AandachtspuntID'] ?? 0),
-            (int) ($row['FunctieID'] ?? 0),
-            (int) ($row['Sort_order'] ?? 0),
-            (string) ($row['Aandachtspunt'] ?? ''),
-            (string) ($row['Toelichting'] ?? ''),
-            (string) ($row['Scan_tekst'] ?? ''),
-            (string) ($row['Advies_tekst'] ?? '')
+            (int) ($row['aandachtspunt_id'] ?? 0),
+            (int) ($row['functie_id'] ?? 0),
+            (int) ($row['sort_order'] ?? 0),
+            (string) ($row['aandachtspunt'] ?? ''),
+            (string) ($row['toelichting'] ?? ''),
+            (string) ($row['scan_tekst'] ?? ''),
+            (string) ($row['advies_tekst'] ?? '')
         );
     }
 }

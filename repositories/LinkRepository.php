@@ -9,12 +9,12 @@ class LinkRepository extends BaseRepository
 
     protected function idColumn(): string
     {
-        return 'LinkID';
+        return 'link_id';
     }
 
     protected function orderBy(): string
     {
-        return 'titel ASC, LinkID ASC';
+        return 'titel ASC, link_id ASC';
     }
 
     public function getAll(): array
@@ -39,7 +39,7 @@ class LinkRepository extends BaseRepository
     public function update(int $id, string $title, string $url, string $importantMessage, bool $showPopup): int
     {
         return (int) execSQL(
-            'UPDATE gids_links SET titel = ?, url = ?, belangrijk_bericht = ?, toon_popup = ? WHERE LinkID = ?',
+            'UPDATE gids_links SET titel = ?, url = ?, belangrijk_bericht = ?, toon_popup = ? WHERE link_id = ?',
             ['sssii', $title, $url, $importantMessage, $showPopup ? 1 : 0, $id],
             true
         );
@@ -53,7 +53,7 @@ class LinkRepository extends BaseRepository
     protected function mapRow(array $row): LinkDTO
     {
         return new LinkDTO(
-            (int) ($row['LinkID'] ?? 0),
+            (int) ($row['link_id'] ?? 0),
             (string) ($row['titel'] ?? ''),
             (string) ($row['url'] ?? ''),
             (string) ($row['belangrijk_bericht'] ?? ''),

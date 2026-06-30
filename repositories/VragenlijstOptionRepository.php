@@ -14,7 +14,7 @@ class VragenlijstOptionRepository extends BaseRepository
 
     protected function orderBy(): string
     {
-        return 'QuestionID ASC, Sort_order ASC, id ASC';
+        return 'question_id ASC, sort_order ASC, id ASC';
     }
 
     public function getAll(): array
@@ -25,7 +25,7 @@ class VragenlijstOptionRepository extends BaseRepository
     public function getByQuestionId(int $questionId): array
     {
         $result = execSQL(
-            'SELECT * FROM gids_vragenlijst_option WHERE QuestionID = ? ORDER BY Sort_order ASC, id ASC',
+            'SELECT * FROM gids_vragenlijst_option WHERE question_id = ? ORDER BY sort_order ASC, id ASC',
             ['i', $questionId],
             false
         );
@@ -56,7 +56,7 @@ class VragenlijstOptionRepository extends BaseRepository
         $params = array_merge([$types], $questionIds);
 
         $result = execSQL(
-            'SELECT * FROM gids_vragenlijst_option WHERE QuestionID IN (' . $placeholders . ') ORDER BY QuestionID ASC, Sort_order ASC, id ASC',
+            'SELECT * FROM gids_vragenlijst_option WHERE question_id IN (' . $placeholders . ') ORDER BY question_id ASC, sort_order ASC, id ASC',
             $params,
             false
         );
@@ -91,7 +91,7 @@ class VragenlijstOptionRepository extends BaseRepository
             }
 
             execSQL(
-                'INSERT INTO gids_vragenlijst_option (QuestionID, Option_value, Label, Sort_order) VALUES (?, ?, ?, ?)',
+                'INSERT INTO gids_vragenlijst_option (question_id, option_value, label, sort_order) VALUES (?, ?, ?, ?)',
                 ['issi', $questionId, $optionValue, $label, $sortOrder],
                 true
             );
@@ -101,7 +101,7 @@ class VragenlijstOptionRepository extends BaseRepository
     public function deleteByQuestionId(int $questionId): int
     {
         return (int) execSQL(
-            'DELETE FROM gids_vragenlijst_option WHERE QuestionID = ?',
+            'DELETE FROM gids_vragenlijst_option WHERE question_id = ?',
             ['i', $questionId],
             true
         );
@@ -111,10 +111,10 @@ class VragenlijstOptionRepository extends BaseRepository
     {
         return new VragenlijstOptionDTO(
             (int) ($row['id'] ?? 0),
-            (int) ($row['QuestionID'] ?? 0),
-            (string) ($row['Option_value'] ?? ''),
-            (string) ($row['Label'] ?? ''),
-            (int) ($row['Sort_order'] ?? 0)
+            (int) ($row['question_id'] ?? 0),
+            (string) ($row['option_value'] ?? ''),
+            (string) ($row['label'] ?? ''),
+            (int) ($row['sort_order'] ?? 0)
         );
     }
 }

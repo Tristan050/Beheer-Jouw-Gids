@@ -60,13 +60,15 @@ Lokaal kan dit bijvoorbeeld met XAMPP voor Apache/MySQL en losse installaties va
    APP_BASE_URL=http://localhost/Beheer-Jouw-Gids
    ```
 
+   Er staan ook nog google client id en secret in dat doet nog niks en word later geimplementeerd, dus die kunnen voorlopig leeg blijven.
+
    Staat het project direct op een eigen host of virtual host, dan kan `APP_BASE_URL` bijvoorbeeld `http://localhost:8082` zijn.
 
 5. Maak een database aan in MySQL.
 
    Gebruik dezelfde naam als `DB_NAME` in `.env`.
 
-6. Run de migrations.
+6. Run de migrations. (dit is alleen voor lokaal met dummy data)
 
    ```bash
    php database/run_migrations.php

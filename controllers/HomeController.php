@@ -71,7 +71,7 @@ class HomeController extends BaseController
 
     private function getScansStats(): array
     {
-        if (!$this->tableExists('gids_scan_data')) {
+        if (!$this->tableExists('gids_scans_data')) {
             return [
                 'totaal' => 0,
                 'vandaag' => 0,
@@ -79,13 +79,13 @@ class HomeController extends BaseController
             ];
         }
 
-        $totalResult = execSQL('SELECT COUNT(*) AS total FROM gids_scan_data', [], false);
-        $todayResult = execSQL('SELECT COUNT(*) AS total FROM gids_scan_data WHERE DATE(Created_at) = CURDATE()', [], false);
+        $totalResult = execSQL('SELECT COUNT(*) AS total FROM gids_scans_data', [], false);
+        $todayResult = execSQL('SELECT COUNT(*) AS total FROM gids_scans_data WHERE DATE(created_at) = CURDATE()', [], false);
 
         return [
             'totaal' => $this->fetchSingleCount($totalResult),
             'vandaag' => $this->fetchSingleCount($todayResult),
-            'chart' => $this->buildDailySeries('gids_scan_data', 'Created_at'),
+            'chart' => $this->buildDailySeries('gids_scans_data', 'created_at'),
         ];
     }
 

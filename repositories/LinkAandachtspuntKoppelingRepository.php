@@ -7,19 +7,19 @@ class LinkAandachtspuntKoppelingRepository
         $result = execSQL(
             'SELECT 
                 ak.id,
-                ak.LinkID,
+                ak.link_id,
                 l.titel,
                 l.url,
-                ak.AandachtspuntID,
-                a.Aandachtspunt,
-                f.Naam_functie,
-                lg.Naam_leefgebied
+                ak.aandachtspunt_id,
+                a.aandachtspunt,
+                f.naam_functie,
+                lg.naam_leefgebied
             FROM gids_aandachtspunt_koppeltabel ak
-            INNER JOIN gids_links l ON l.LinkID = ak.LinkID
-            INNER JOIN gids_aandachtspunt a ON a.AandachtspuntID = ak.AandachtspuntID
-            INNER JOIN gids_functie f ON f.FunctieID = a.FunctieID
-            INNER JOIN gids_leefgebied lg ON lg.LeefgebiedID = f.LeefgebiedID
-            ORDER BY l.titel ASC, lg.Sort_order ASC, f.Sort_order ASC, a.Sort_order ASC',
+            INNER JOIN gids_links l ON l.link_id = ak.link_id
+            INNER JOIN gids_aandachtspunt a ON a.aandachtspunt_id = ak.aandachtspunt_id
+            INNER JOIN gids_functie f ON f.functie_id = a.functie_id
+            INNER JOIN gids_leefgebied lg ON lg.leefgebied_id = f.leefgebied_id
+            ORDER BY l.titel ASC, lg.sort_order ASC, f.sort_order ASC, a.sort_order ASC',
             [],
             false
         );
@@ -32,13 +32,13 @@ class LinkAandachtspuntKoppelingRepository
         while ($row = $result->fetch_assoc()) {
             $rows[] = [
                 'id' => (int) ($row['id'] ?? 0),
-                'link_id' => (int) ($row['LinkID'] ?? 0),
+                'link_id' => (int) ($row['link_id'] ?? 0),
                 'link_title' => (string) ($row['titel'] ?? ''),
                 'link_url' => (string) ($row['url'] ?? ''),
-                'aandachtspunt_id' => (int) ($row['AandachtspuntID'] ?? 0),
-                'aandachtspunt' => (string) ($row['Aandachtspunt'] ?? ''),
-                'functie_name' => (string) ($row['Naam_functie'] ?? ''),
-                'leefgebied_name' => (string) ($row['Naam_leefgebied'] ?? ''),
+                'aandachtspunt_id' => (int) ($row['aandachtspunt_id'] ?? 0),
+                'aandachtspunt' => (string) ($row['aandachtspunt'] ?? ''),
+                'functie_name' => (string) ($row['naam_functie'] ?? ''),
+                'leefgebied_name' => (string) ($row['naam_leefgebied'] ?? ''),
             ];
         }
 
@@ -48,7 +48,7 @@ class LinkAandachtspuntKoppelingRepository
     public function getAandachtspuntIdsForLink(int $linkId): array
     {
         $result = execSQL(
-            'SELECT AandachtspuntID FROM gids_aandachtspunt_koppeltabel WHERE LinkID = ? ORDER BY AandachtspuntID ASC',
+            'SELECT aandachtspunt_id FROM gids_aandachtspunt_koppeltabel WHERE link_id = ? ORDER BY aandachtspunt_id ASC',
             ['i', $linkId],
             false
         );
@@ -59,7 +59,7 @@ class LinkAandachtspuntKoppelingRepository
 
         $ids = [];
         while ($row = $result->fetch_assoc()) {
-            $ids[] = (int) ($row['AandachtspuntID'] ?? 0);
+            $ids[] = (int) ($row['aandachtspunt_id'] ?? 0);
         }
 
         return $ids;
@@ -68,14 +68,14 @@ class LinkAandachtspuntKoppelingRepository
     public function replaceAandachtspuntenForLink(int $linkId, array $aandachtspuntIds): void
     {
         execSQL(
-            'DELETE FROM gids_aandachtspunt_koppeltabel WHERE LinkID = ?',
+            'DELETE FROM gids_aandachtspunt_koppeltabel WHERE link_id = ?',
             ['i', $linkId],
             true
         );
 
         foreach ($aandachtspuntIds as $aandachtspuntId) {
             execSQL(
-                'INSERT INTO gids_aandachtspunt_koppeltabel (LinkID, AandachtspuntID) VALUES (?, ?)',
+                'INSERT INTO gids_aandachtspunt_koppeltabel (link_id, aandachtspunt_id) VALUES (?, ?)',
                 ['ii', $linkId, (int) $aandachtspuntId],
                 true
             );
@@ -85,7 +85,7 @@ class LinkAandachtspuntKoppelingRepository
     public function deleteLink(int $linkId, int $aandachtspuntId): int
     {
         return (int) execSQL(
-            'DELETE FROM gids_aandachtspunt_koppeltabel WHERE LinkID = ? AND AandachtspuntID = ?',
+            'DELETE FROM gids_aandachtspunt_koppeltabel WHERE link_id = ? AND aandachtspunt_id = ?',
             ['ii', $linkId, $aandachtspuntId],
             true
         );
